@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
-import { useMaterials } from '@/hooks/use-materials';
+import { useMaterials, useDownloadMaterial } from '@/hooks/use-materials';
 import { useAuth } from '@/lib/auth-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,6 +31,7 @@ export default function MaterialsPage() {
   const [category, setCategory] = useState('all');
   const [page, setPage] = useState(1);
   const { data: materialsData, isLoading } = useMaterials(page, 12, search, category);
+  const downloadMutation = useDownloadMaterial();
 
   const isLecturer = user?.role === 'lecturer';
   const materials = materialsData?.data || [];
@@ -86,7 +87,7 @@ export default function MaterialsPage() {
 
         {/* Search and Filter */}
         <div className="mb-8 space-y-4">
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
@@ -97,7 +98,7 @@ export default function MaterialsPage() {
               />
             </div>
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-full sm:w-48">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -113,7 +114,7 @@ export default function MaterialsPage() {
 
         {/* Materials Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {[...Array(6)].map((_, i) => (
               <Card key={i} className="animate-pulse">
                 <CardHeader>
@@ -128,7 +129,7 @@ export default function MaterialsPage() {
             ))}
           </div>
         ) : materials.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {materials.map((material, index) => (
               <motion.div
                 key={material._id}
@@ -139,66 +140,73 @@ export default function MaterialsPage() {
                 <Card className="h-full hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg mb-2">{material.title}</CardTitle>
-                        <CardDescription className="flex items-center gap-2 text-sm">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-base sm:text-lg mb-2 truncate">{material.title}</CardTitle>
+                        <div className="text-sm text-muted-foreground flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm">
                           <div className="flex items-center gap-1">
-                            <BookOpen className="h-4 w-4" />
-                            {material.course.title}
+                            <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="truncate">{material.course.title}</span>
                           </div>
                           {material.category && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="secondary" className="text-xs w-fit">
                               {material.category}
                             </Badge>
                           )}
-                        </CardDescription>
+                        </div>
                       </div>
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-2xl">{getFileIcon(material.fileType)}</span>
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+                        <span className="text-lg sm:text-2xl">{getFileIcon(material.fileType)}</span>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
                     {material.description && (
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">
                         {material.description}
                       </p>
                     )}
                     
                     <div className="space-y-2 mb-4">
-                      <div className="flex items-center justify-between text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <File className="h-4 w-4" />
-                          {material.fileName}
+                      <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
+                        <div className="flex items-center gap-1 truncate">
+                          <File className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="truncate">{material.fileName}</span>
                         </div>
-                        <span>{formatFileSize(material.fileSize)}</span>
+                        <span className="flex-shrink-0">{formatFileSize(material.fileSize)}</span>
                       </div>
-                      <div className="flex items-center justify-between text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <User className="h-4 w-4" />
-                          {material.uploadedBy.name}
+                      <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
+                        <div className="flex items-center gap-1 truncate">
+                          <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="truncate">{material.uploadedBy.name}</span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          {formatDate(material.uploadedAt)}
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <span className="hidden sm:inline">{formatDate(material.uploadedAt)}</span>
+                          <span className="sm:hidden">{formatDate(material.uploadedAt, 'MMM dd')}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         variant="outline"
                         size="sm"
                         className="flex-1"
-                        onClick={() => window.open(material.fileUrl, '_blank')}
+                        onClick={() => downloadMutation.mutate(material._id)}
+                        disabled={downloadMutation.isPending}
                       >
-                        <Download className="mr-2 h-4 w-4" />
-                        Download
+                        <Download className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">
+                          {downloadMutation.isPending ? 'Downloading...' : 'Download'}
+                        </span>
+                        <span className="sm:hidden">
+                          {downloadMutation.isPending ? 'DL...' : 'DL'}
+                        </span>
                       </Button>
                       
                       {isLecturer && material.uploadedBy._id === user?._id && (
                         <Link href={`/materials/${material._id}/edit`}>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="w-full sm:w-auto">
                             Edit
                           </Button>
                         </Link>

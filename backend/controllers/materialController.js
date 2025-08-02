@@ -286,7 +286,7 @@ const deleteMaterial = async (req, res, next) => {
     }
 
     // Delete file from filesystem
-    const filePath = path.join(__dirname, '..', material.fileUrl);
+    const filePath = path.join(__dirname, '..', 'uploads', path.basename(material.fileUrl));
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
@@ -328,7 +328,7 @@ const downloadMaterial = async (req, res, next) => {
       });
     }
 
-    const filePath = path.join(__dirname, '..', material.fileUrl);
+    const filePath = path.join(__dirname, '..', 'uploads', path.basename(material.fileUrl));
 
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({
@@ -458,7 +458,7 @@ const previewMaterial = async (req, res, next) => {
       });
     }
 
-    const filePath = path.join(__dirname, '..', material.fileUrl);
+    const filePath = path.join(__dirname, '..', 'uploads', path.basename(material.fileUrl));
 
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({

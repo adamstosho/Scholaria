@@ -22,6 +22,10 @@ interface SidebarItem {
   requireRole?: 'student' | 'lecturer';
 }
 
+interface SidebarProps {
+  onItemClick?: () => void;
+}
+
 const sidebarItems: SidebarItem[] = [
   {
     name: 'Dashboard',
@@ -56,7 +60,7 @@ const sidebarItems: SidebarItem[] = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ onItemClick }: SidebarProps) {
   const { user } = useAuth();
   const pathname = usePathname();
 
@@ -79,6 +83,7 @@ export function Sidebar() {
               <li key={item.name}>
                 <Link
                   href={item.href}
+                  onClick={onItemClick}
                   className={cn(
                     'group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200',
                     isActive

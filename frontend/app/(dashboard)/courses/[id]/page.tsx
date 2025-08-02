@@ -24,6 +24,11 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { format as formatDateFn } from 'date-fns';
 
+// Required for static export
+export async function generateStaticParams() {
+  return [];
+}
+
 export default function CourseDetailPage() {
   // Helper function to safely format dates
   const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM dd') => {
@@ -115,7 +120,7 @@ export default function CourseDetailPage() {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Calendar className="h-4 w-4 mr-1" />
-                  Created {format(new Date(course.createdAt), 'MMM yyyy')}
+                  Created {formatDateFn(new Date(course.createdAt), 'MMM yyyy')}
                 </div>
               </div>
             </div>
@@ -232,7 +237,7 @@ export default function CourseDetailPage() {
                             </div>
                             <div className="flex items-center gap-1">
                               <Calendar className="h-4 w-4" />
-                              {format(new Date(announcement.createdAt), 'MMM dd, yyyy')}
+                              {formatDateFn(new Date(announcement.createdAt), 'MMM dd, yyyy')}
                             </div>
                           </CardDescription>
                         </div>
@@ -298,9 +303,9 @@ export default function CourseDetailPage() {
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
                                 <CardTitle className="text-sm mb-2">{material.title}</CardTitle>
-                                <CardDescription className="text-xs">
-                                  {material.uploadedBy.name} • {formatDate(material.uploadedAt)}
-                                </CardDescription>
+                                                                  <CardDescription className="text-xs">
+                                   {material.uploadedBy.name} • {formatDate(material.uploadedAt)}
+                                  </CardDescription>
                               </div>
                               <span className="text-2xl">{getFileIcon(material.fileType)}</span>
                             </div>

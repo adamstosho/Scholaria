@@ -11,9 +11,21 @@ import { Badge } from '@/components/ui/badge';
 import { Megaphone, Search, Calendar, User, BookOpen, Plus, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { format as formatDateFn } from 'date-fns';
 
 export default function AnnouncementsPage() {
+  // Helper function to safely format dates
+  const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM dd, yyyy') => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'N/A';
+      return formatDateFn(date, formatString);
+    } catch (error) {
+      return 'N/A';
+    }
+  };
+
   const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -61,7 +73,7 @@ export default function AnnouncementsPage() {
 
         {/* Announcements List */}
         {isLoading ? (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {[...Array(5)].map((_, i) => (
               <Card key={i} className="animate-pulse">
                 <CardHeader>
@@ -76,7 +88,7 @@ export default function AnnouncementsPage() {
             ))}
           </div>
         ) : announcements.length > 0 ? (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {announcements.map((announcement, index) => (
               <motion.div
                 key={announcement._id}
@@ -89,44 +101,45 @@ export default function AnnouncementsPage() {
                 }`}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <CardTitle className="text-lg">{announcement.title}</CardTitle>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                          <CardTitle className="text-base sm:text-lg truncate">{announcement.title}</CardTitle>
                           {announcement.isImportant && (
-                            <Badge variant="destructive" className="flex items-center gap-1">
+                            <Badge variant="destructive" className="flex items-center gap-1 w-fit">
                               <AlertTriangle className="h-3 w-3" />
                               Important
                             </Badge>
                           )}
                         </div>
-                        <CardDescription className="flex items-center gap-4 text-sm">
+                        <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm">
                           <div className="flex items-center gap-1">
-                            <BookOpen className="h-4 w-4" />
-                            {announcement.course.title}
+                            <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="truncate">{announcement.course.title}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <User className="h-4 w-4" />
-                            {announcement.createdBy.name}
+                            <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="truncate">{announcement.createdBy.name}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            {format(new Date(announcement.createdAt), 'MMM dd, yyyy')}
+                            <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">{formatDate(announcement.createdAt)}</span>
+                            <span className="sm:hidden">{formatDate(announcement.createdAt, 'MMM dd, yyyy')}</span>
                           </div>
                         </CardDescription>
                       </div>
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Megaphone className="h-6 w-6 text-blue-600" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+                        <Megaphone className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700 mb-4 whitespace-pre-wrap">
+                    <p className="text-gray-700 text-xs sm:text-sm mb-4 whitespace-pre-wrap line-clamp-3">
                       {announcement.body}
                     </p>
                     
                     {announcement.attachments && announcement.attachments.length > 0 && (
                       <div className="mb-4">
-                        <p className="text-sm font-medium text-gray-700 mb-2">Attachments:</p>
+                        <p className="text-xs sm:text-sm font-medium text-gray-700 mb-2">Attachments:</p>
                         <div className="flex flex-wrap gap-2">
                           {announcement.attachments.map((attachment, idx) => (
                             <Badge key={idx} variant="outline" className="text-xs">
@@ -137,17 +150,17 @@ export default function AnnouncementsPage() {
                       </div>
                     )}
 
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                       <Link href={`/announcements/${announcement._id}`}>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="w-full sm:w-auto">
                           View Details
                         </Button>
                       </Link>
                       
                       {isLecturer && announcement.createdBy._id === user?._id && (
-                        <div className="flex gap-2">
-                          <Link href={`/announcements/${announcement._id}/edit`}>
-                            <Button variant="outline" size="sm">
+                        <div className="flex gap-2 w-full sm:w-auto">
+                          <Link href={`/announcements/${announcement._id}/edit`} className="flex-1 sm:flex-none">
+                            <Button variant="outline" size="sm" className="w-full">
                               Edit
                             </Button>
                           </Link>

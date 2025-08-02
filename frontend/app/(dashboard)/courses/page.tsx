@@ -11,9 +11,21 @@ import { Badge } from '@/components/ui/badge';
 import { BookOpen, Users, Plus, Search, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { format as formatDateFn } from 'date-fns';
 
 export default function CoursesPage() {
+  // Helper function to safely format dates
+  const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM yyyy') => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'N/A';
+      return formatDateFn(date, formatString);
+    } catch (error) {
+      return 'N/A';
+    }
+  };
+
   const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -74,7 +86,7 @@ export default function CoursesPage() {
 
         {/* Courses Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[...Array(6)].map((_, i) => (
               <Card key={i} className="animate-pulse">
                 <CardHeader>
@@ -89,7 +101,7 @@ export default function CoursesPage() {
             ))}
           </div>
         ) : courses.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {courses.map((course, index) => (
               <motion.div
                 key={course._id}
@@ -100,39 +112,38 @@ export default function CoursesPage() {
                 <Card className="h-full hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg mb-2">{course.title}</CardTitle>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Badge variant="secondary" className="mr-2">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-base sm:text-lg mb-2 truncate">{course.title}</CardTitle>
+                        <div className="text-sm text-muted-foreground flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                          <Badge variant="secondary" className="w-fit">
                             {course.code}
                           </Badge>
-                          <span className="text-gray-500">
-                            by {course.lecturer.name}
-                          </span>
+                          <span className="text-gray-500 truncate">{course.lecturer.name}</span>
                         </div>
                       </div>
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <BookOpen className="h-6 w-6 text-blue-600" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+                        <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">
                       {course.description}
                     </p>
                     
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-4">
                       <div className="flex items-center">
-                        <Users className="h-4 w-4 mr-1" />
+                        <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         {course.students?.length || 0} students
                       </div>
                       <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        {format(new Date(course.createdAt), 'MMM yyyy')}
+                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                        <span className="hidden sm:inline">{formatDate(course.createdAt)}</span>
+                        <span className="sm:hidden">{formatDate(course.createdAt, 'MMM yyyy')}</span>
                       </div>
                     </div>
 
-                    <div className="flex space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Link href={`/courses/${course._id}`} className="flex-1">
                         <Button variant="outline" className="w-full">
                           View Details
@@ -157,7 +168,7 @@ export default function CoursesPage() {
                       
                       {isLecturer && isOwner(course) && (
                         <Link href={`/courses/${course._id}/edit`}>
-                          <Button variant="outline">
+                          <Button variant="outline" className="w-full sm:w-auto">
                             Edit
                           </Button>
                         </Link>

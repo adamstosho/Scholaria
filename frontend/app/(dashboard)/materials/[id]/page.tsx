@@ -26,6 +26,11 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { format as formatDateFn } from 'date-fns';
 
+// Required for static export
+export async function generateStaticParams() {
+  return [];
+}
+
 export default function MaterialDetailPage() {
   // Helper function to safely format dates
   const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM dd, yyyy HH:mm') => {

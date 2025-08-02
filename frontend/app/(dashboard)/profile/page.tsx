@@ -16,9 +16,21 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { User, Mail, Calendar, Shield, Loader2, Save } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { format as formatDateFn } from 'date-fns';
 
 export default function ProfilePage() {
+  // Helper function to safely format dates
+  const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM yyyy') => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'N/A';
+      return formatDateFn(date, formatString);
+    } catch (error) {
+      return 'N/A';
+    }
+  };
+
   const { user } = useAuth();
   const updateProfileMutation = useUpdateProfile();
   const updatePasswordMutation = useUpdatePassword();
@@ -92,38 +104,31 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Profile Overview */}
           <div className="lg:col-span-1">
             <Card>
               <CardHeader className="text-center">
-                <Avatar className="w-24 h-24 mx-auto mb-4">
-                  <AvatarImage src={user.avatar} />
-                  <AvatarFallback className="text-2xl">
+                <Avatar className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4">
+                  <AvatarFallback className="text-lg sm:text-xl bg-blue-100 text-blue-600">
                     {user.name.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
-                <CardTitle className="text-xl">{user.name}</CardTitle>
-                <CardDescription className="flex items-center justify-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  {user.email}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Role</span>
+                <div className="space-y-2">
+                  <h3 className="text-lg sm:text-xl font-semibold">{user.name}</h3>
+                  <p className="text-sm text-gray-600">{user.email}</p>
                   <Badge variant={user.role === 'lecturer' ? 'default' : 'secondary'}>
                     {user.role === 'lecturer' ? 'Lecturer' : 'Student'}
                   </Badge>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Member since</span>
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>Member since</span>
                   <span className="text-sm text-gray-900">
-                    {format(new Date(user.createdAt), 'MMM yyyy')}
+                    {formatDate(user.createdAt)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Courses</span>
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>Courses</span>
                   <span className="text-sm text-gray-900">
                     {user.role === 'lecturer' 
                       ? user.createdCourses?.length || 0
@@ -131,7 +136,7 @@ export default function ProfilePage() {
                     }
                   </span>
                 </div>
-              </CardContent>
+              </CardHeader>
             </Card>
           </div>
 
@@ -152,7 +157,7 @@ export default function ProfilePage() {
                 <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
                   <button
                     onClick={() => setActiveTab('profile')}
-                    className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex-1 py-2 px-3 sm:px-4 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                       activeTab === 'profile'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-600 hover:text-gray-900'
@@ -162,7 +167,7 @@ export default function ProfilePage() {
                   </button>
                   <button
                     onClick={() => setActiveTab('password')}
-                    className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex-1 py-2 px-3 sm:px-4 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                       activeTab === 'password'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-600 hover:text-gray-900'
@@ -177,7 +182,7 @@ export default function ProfilePage() {
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="name">Full Name</Label>
                           <Input
@@ -227,7 +232,7 @@ export default function ProfilePage() {
                   </form>
                 ) : (
                   <form onSubmit={handleSubmit(onSubmitPassword)} className="space-y-6">
-                    {/* Password Change */}
+                    {/* Password Information */}
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 mb-4">Change Password</h3>
                       <div className="space-y-4">
@@ -236,38 +241,36 @@ export default function ProfilePage() {
                           <Input
                             id="currentPassword"
                             type="password"
-                            placeholder="Enter current password"
+                            placeholder="Enter your current password"
                             {...register('currentPassword')}
                           />
                           {errors.currentPassword && (
                             <p className="text-sm text-red-600">{errors.currentPassword.message}</p>
                           )}
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="newPassword">New Password</Label>
-                            <Input
-                              id="newPassword"
-                              type="password"
-                              placeholder="Enter new password"
-                              {...register('newPassword')}
-                            />
-                            {errors.newPassword && (
-                              <p className="text-sm text-red-600">{errors.newPassword.message}</p>
-                            )}
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                            <Input
-                              id="confirmPassword"
-                              type="password"
-                              placeholder="Confirm new password"
-                              {...register('confirmPassword')}
-                            />
-                            {errors.confirmPassword && (
-                              <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
-                            )}
-                          </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="newPassword">New Password</Label>
+                          <Input
+                            id="newPassword"
+                            type="password"
+                            placeholder="Enter your new password"
+                            {...register('newPassword')}
+                          />
+                          {errors.newPassword && (
+                            <p className="text-sm text-red-600">{errors.newPassword.message}</p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                          <Input
+                            id="confirmPassword"
+                            type="password"
+                            placeholder="Confirm your new password"
+                            {...register('confirmPassword')}
+                          />
+                          {errors.confirmPassword && (
+                            <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -294,34 +297,6 @@ export default function ProfilePage() {
                     </div>
                   </form>
                 )}
-
-                <Separator className="my-6" />
-
-                {/* Account Statistics */}
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Account Statistics</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-600">
-                        {user.role === 'lecturer' 
-                          ? user.createdCourses?.length || 0
-                          : user.enrolledCourses?.length || 0
-                        }
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {user.role === 'lecturer' ? 'Created Courses' : 'Enrolled Courses'}
-                      </div>
-                    </div>
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">0</div>
-                      <div className="text-sm text-gray-600">Announcements</div>
-                    </div>
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                      <div className="text-2xl font-bold text-purple-600">0</div>
-                      <div className="text-sm text-gray-600">Materials</div>
-                    </div>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>

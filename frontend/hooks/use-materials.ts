@@ -97,17 +97,33 @@ export function useDeleteMaterial() {
 export function useDownloadMaterial() {
   return useMutation({
     mutationFn: async (id: string) => {
+      // First get the material details to get the file type
+      const materialResponse = await api.get(`/materials/detail/${id}`);
+      const material = materialResponse.data.data;
+      
+      // Then download the file
       const response = await api.get(`/materials/download/${id}`, {
         responseType: 'blob',
       });
-      return response.data;
+      
+      return { 
+        data: response.data, 
+        headers: response.headers,
+        material: material
+      };
     },
-    onSuccess: (data, id) => {
-      // Create a download link
-      const url = window.URL.createObjectURL(new Blob([data]));
+    onSuccess: (response, id) => {
+      // Create a download link with proper MIME type
+      const blob = new Blob([response.data], { 
+        type: response.material.fileType 
+      });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `material-${id}.pdf`); // You might want to get the actual filename
+      
+      // Use the original filename from the material
+      const filename = response.material.fileName;
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
       link.remove();

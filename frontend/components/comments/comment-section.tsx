@@ -16,7 +16,7 @@ import {
   MoreVertical,
   Loader2
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { format as formatDateFn } from 'date-fns';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +29,18 @@ interface CommentSectionProps {
 }
 
 export function CommentSection({ announcementId }: CommentSectionProps) {
+  // Helper function to safely format dates
+  const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM dd, yyyy HH:mm') => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'N/A';
+      return formatDateFn(date, formatString);
+    } catch (error) {
+      return 'N/A';
+    }
+  };
+
   const { user } = useAuth();
   const [newComment, setNewComment] = useState('');
   const [editingComment, setEditingComment] = useState<string | null>(null);
@@ -215,7 +227,7 @@ export function CommentSection({ announcementId }: CommentSectionProps) {
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-sm">{comment.user.name}</span>
                             <span className="text-xs text-gray-500">
-                              {format(new Date(comment.createdAt), 'MMM dd, yyyy HH:mm')}
+                              {formatDate(comment.createdAt)}
                             </span>
                             {comment.isEdited && (
                               <Badge variant="secondary" className="text-xs">Edited</Badge>

@@ -24,6 +24,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
+// Required for static export
+export async function generateStaticParams() {
+  return [];
+}
+
 const courseSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(100, 'Title must be less than 100 characters'),
   code: z.string().min(2, 'Code must be at least 2 characters').max(20, 'Code must be less than 20 characters'),

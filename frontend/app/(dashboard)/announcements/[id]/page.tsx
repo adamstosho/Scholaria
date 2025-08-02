@@ -22,9 +22,26 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
+import { format as formatDateFn } from 'date-fns';
+
+// Required for static export
+export async function generateStaticParams() {
+  return [];
+}
 
 export default function AnnouncementDetailPage() {
+  // Helper function to safely format dates
+  const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM dd, yyyy HH:mm') => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'N/A';
+      return formatDateFn(date, formatString);
+    } catch (error) {
+      return 'N/A';
+    }
+  };
+
   const params = useParams();
   const router = useRouter();
   const announcementId = params.id as string;
@@ -105,7 +122,7 @@ export default function AnnouncementDetailPage() {
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  {format(new Date(announcement.createdAt), 'MMM dd, yyyy HH:mm')}
+                  {formatDate(announcement.createdAt)}
                 </div>
                 <div className="flex items-center gap-1">
                   <BookOpen className="h-4 w-4" />
