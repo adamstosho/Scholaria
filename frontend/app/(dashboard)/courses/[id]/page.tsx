@@ -301,7 +301,7 @@ export default function CourseDetailPage() {
                           <div className="p-4 material-card-content">
                             <div className="space-y-3 flex-1">
                               <QuickPreview
-                                fileUrl={`http://localhost:5000${material.fileUrl}`}
+                                fileUrl={`https://scholaria-1.onrender.com${material.fileUrl}`}
                                 fileName={material.fileName}
                                 fileType={material.fileType}
                                 fileSize={material.fileSize}
@@ -313,7 +313,7 @@ export default function CourseDetailPage() {
                                   variant="outline"
                                   size="sm"
                                   className="flex-1"
-                                  onClick={() => window.open(`http://localhost:5000${material.fileUrl}`, '_blank')}
+                                  onClick={() => window.open(`https://scholaria-1.onrender.com${material.fileUrl}`, '_blank')}
                                 >
                                   <Download className="mr-1 h-3 w-3" />
                                   Download

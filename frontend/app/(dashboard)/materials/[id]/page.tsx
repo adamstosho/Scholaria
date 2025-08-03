@@ -80,7 +80,7 @@ export default function MaterialDetailPage() {
 
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = `http://localhost:5000${material.fileUrl}`;
+    link.href = `https://scholaria-1.onrender.com${material.fileUrl}`;
     link.download = material.fileName;
     document.body.appendChild(link);
     link.click();
@@ -88,7 +88,7 @@ export default function MaterialDetailPage() {
   };
 
   const handleOpenInNewTab = () => {
-    window.open(`http://localhost:5000${material.fileUrl}`, '_blank');
+    window.open(`https://scholaria-1.onrender.com${material.fileUrl}`, '_blank');
   };
 
   return (
@@ -177,7 +177,7 @@ export default function MaterialDetailPage() {
 
             {/* File Preview */}
             <FilePreview
-              fileUrl={`http://localhost:5000${material.fileUrl}`}
+              fileUrl={`https://scholaria-1.onrender.com${material.fileUrl}`}
               fileName={material.fileName}
               fileType={material.fileType}
               fileSize={material.fileSize}

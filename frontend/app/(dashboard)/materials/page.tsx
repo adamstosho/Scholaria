@@ -180,7 +180,7 @@ export default function MaterialsPage() {
                     
                     <div className="space-y-3 mb-4 flex-1">
                       <QuickPreview
-                        fileUrl={`http://localhost:5000${material.fileUrl}`}
+                        fileUrl={`https://scholaria-1.onrender.com${material.fileUrl}`}
                         fileName={material.fileName}
                         fileType={material.fileType}
                         fileSize={material.fileSize}
