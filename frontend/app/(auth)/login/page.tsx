@@ -10,8 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -41,7 +42,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-emerald-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-accent to-secondary/20 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -50,8 +51,14 @@ export default function LoginPage() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold">Scholaria</span>
+              <Image 
+                src="/logo.svg" 
+                alt="Scholaria Logo" 
+                width={32} 
+                height={32} 
+                className="h-8 w-8"
+              />
+              <span className="text-2xl font-bold text-foreground">Scholaria</span>
             </div>
             <CardTitle className="text-2xl">Welcome back</CardTitle>
             <CardDescription>
@@ -97,9 +104,9 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
-                <Link href="/register" className="text-blue-600 hover:underline">
+                            <p className="text-sm text-muted-foreground">
+                Don&apos;t have an account?{' '}
+                <Link href="/register" className="text-primary hover:underline">
                   Sign up
                 </Link>
               </p>

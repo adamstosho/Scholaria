@@ -11,20 +11,11 @@ import { Badge } from '@/components/ui/badge';
 import { BookOpen, Users, Plus, Search, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { format as formatDateFn } from 'date-fns';
+import { formatDateMedium } from '@/lib/utils';
 
 export default function CoursesPage() {
   // Helper function to safely format dates
-  const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM yyyy') => {
-    if (!dateString) return 'N/A';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return 'N/A';
-      return formatDateFn(date, formatString);
-    } catch (error) {
-      return 'N/A';
-    }
-  };
+
 
   const { user } = useAuth();
   const [search, setSearch] = useState('');
@@ -54,34 +45,53 @@ export default function CoursesPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Courses</h1>
-            <p className="text-gray-600 mt-2">
-              {isLecturer ? 'Manage your courses' : 'Discover and enroll in courses'}
-            </p>
+            <motion.h1 
+              className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              Courses
+            </motion.h1>
+            <motion.p 
+              className="text-lg text-gray-600 mt-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              {isLecturer ? 'Manage your courses effectively' : 'Discover and enroll in amazing courses'}
+            </motion.p>
           </div>
           {isLecturer && (
             <Link href="/courses/create">
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Create Course
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create Course
+                </Button>
+              </motion.div>
             </Link>
           )}
         </div>
 
         {/* Search Bar */}
-        <div className="mb-8">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+        <div className="mb-10">
+          <motion.div 
+            className="relative max-w-md"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <Input
-              placeholder="Search courses..."
+              placeholder="Search courses by name or lecturer..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
+              className="pl-12 pr-4 py-3 bg-white/80 backdrop-blur-sm border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl shadow-sm"
             />
-          </div>
+          </motion.div>
         </div>
 
         {/* Courses Grid */}
@@ -109,68 +119,78 @@ export default function CoursesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow duration-300">
-                  <CardHeader>
+                <Card className="h-full bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden">
+                  <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base sm:text-lg mb-2 truncate">{course.title}</CardTitle>
-                        <div className="text-sm text-muted-foreground flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-                          <Badge variant="secondary" className="w-fit">
+                        <CardTitle className="text-lg sm:text-xl mb-3 text-gray-900 group-hover:text-blue-600 transition-colors duration-300 truncate">
+                          {course.title}
+                        </CardTitle>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm">
+                          <Badge className="w-fit bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
                             {course.code}
                           </Badge>
-                          <span className="text-gray-500 truncate">{course.lecturer.name}</span>
+                          <span className="text-gray-600 truncate font-medium">{course.lecturer.name}</span>
                         </div>
                       </div>
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
-                        <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
-                      </div>
+                      <motion.div 
+                        className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0 ml-3 group-hover:scale-110 transition-transform duration-300"
+                        whileHover={{ rotate: 5 }}
+                      >
+                        <BookOpen className="h-6 w-6 text-white" />
+                      </motion.div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">
+                  <CardContent className="pt-0">
+                    <p className="text-gray-600 text-sm mb-6 line-clamp-3 leading-relaxed">
                       {course.description}
                     </p>
                     
-                    <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-4">
-                      <div className="flex items-center">
-                        <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                        {course.students?.length || 0} students
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                      <div className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+                        <Users className="h-4 w-4 mr-2 text-blue-500" />
+                        <span className="font-medium">{course.students?.length || 0} students</span>
                       </div>
-                      <div className="flex items-center">
-                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                        <span className="hidden sm:inline">{formatDate(course.createdAt)}</span>
-                        <span className="sm:hidden">{formatDate(course.createdAt, 'MMM yyyy')}</span>
+                      <div className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+                        <Calendar className="h-4 w-4 mr-2 text-purple-500" />
+                        <span className="font-medium">{formatDateMedium(course.createdAt)}</span>
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col sm:flex-row gap-3">
                       <Link href={`/courses/${course._id}`} className="flex-1">
-                        <Button variant="outline" className="w-full">
-                          View Details
-                        </Button>
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                          <Button variant="outline" className="w-full border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-300">
+                            View Details
+                          </Button>
+                        </motion.div>
                       </Link>
                       
                       {!isLecturer && !isEnrolled(course._id) && (
-                        <Button
-                          onClick={() => handleEnroll(course._id)}
-                          disabled={enrollMutation.isPending}
-                          className="flex-1"
-                        >
-                          {enrollMutation.isPending ? 'Enrolling...' : 'Enroll'}
-                        </Button>
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
+                          <Button
+                            onClick={() => handleEnroll(course._id)}
+                            disabled={enrollMutation.isPending}
+                            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg"
+                          >
+                            {enrollMutation.isPending ? 'Enrolling...' : 'Enroll'}
+                          </Button>
+                        </motion.div>
                       )}
                       
                       {!isLecturer && isEnrolled(course._id) && (
-                        <Button disabled className="flex-1">
-                          Enrolled
+                        <Button disabled className="flex-1 bg-green-100 text-green-700 border-green-200">
+                          ✓ Enrolled
                         </Button>
                       )}
                       
                       {isLecturer && isOwner(course) && (
                         <Link href={`/courses/${course._id}/edit`}>
-                          <Button variant="outline" className="w-full sm:w-auto">
-                            Edit
-                          </Button>
+                          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                            <Button variant="outline" className="w-full border-2 border-gray-200 hover:border-purple-500 hover:bg-purple-50 transition-all duration-300">
+                              Edit Course
+                            </Button>
+                          </motion.div>
                         </Link>
                       )}
                     </div>
@@ -181,11 +201,11 @@ export default function CoursesPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">
               {search ? 'No courses found' : 'No courses available'}
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-muted-foreground mb-6">
               {search 
                 ? 'Try adjusting your search terms'
                 : isLecturer 

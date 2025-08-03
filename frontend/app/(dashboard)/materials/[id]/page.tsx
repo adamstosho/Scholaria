@@ -24,25 +24,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { format as formatDateFn } from 'date-fns';
-
-// Required for static export
-export async function generateStaticParams() {
-  return [];
-}
+import { formatDateFull, formatDateMedium } from '@/lib/utils';
 
 export default function MaterialDetailPage() {
   // Helper function to safely format dates
-  const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM dd, yyyy HH:mm') => {
-    if (!dateString) return 'N/A';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return 'N/A';
-      return formatDateFn(date, formatString);
-    } catch (error) {
-      return 'N/A';
-    }
-  };
+
   const params = useParams();
   const materialId = params.id as string;
   const { user } = useAuth();
@@ -62,9 +48,9 @@ export default function MaterialDetailPage() {
     return (
       <DashboardLayout>
         <div className="text-center py-12">
-          <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Material not found</h3>
-          <p className="text-gray-500 mb-6">The material you're looking for doesn't exist or you don't have access to it.</p>
+          <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">Material not found</h3>
+          <p className="text-muted-foreground mb-6">The material you're looking for doesn't exist or you don't have access to it.</p>
           <Link href="/materials">
             <Button>Back to Materials</Button>
           </Link>
@@ -136,20 +122,20 @@ export default function MaterialDetailPage() {
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">{getFileIcon(material.fileType)}</span>
-                <h1 className="text-3xl font-bold text-gray-900">{material.title}</h1>
+                <h1 className="text-3xl font-bold text-foreground">{material.title}</h1>
                 <Badge variant="secondary" className="text-sm capitalize">
                   {material.category}
                 </Badge>
               </div>
               
-              <div className="flex items-center gap-6 text-sm text-gray-600">
+              <div className="flex items-center gap-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <User className="h-4 w-4" />
                   {material.uploadedBy.name}
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  {formatDate(material.uploadedAt)}
+                  {formatDateFull(material.createdAt)}
                 </div>
                 <div className="flex items-center gap-1">
                   <BookOpen className="h-4 w-4" />
@@ -185,49 +171,20 @@ export default function MaterialDetailPage() {
                   <CardTitle>Description</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 whitespace-pre-wrap">{material.description}</p>
+                  <p className="text-card-foreground whitespace-pre-wrap">{material.description}</p>
                 </CardContent>
               </Card>
             )}
 
             {/* File Preview */}
-            <Card>
-              <CardHeader>
-                <CardTitle>File Preview</CardTitle>
-                <CardDescription>
-                  {fileInfo.canPreview 
-                    ? 'Preview the file directly in your browser'
-                    : 'This file type cannot be previewed'
-                  }
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {fileInfo.canPreview ? (
-                  <div className="border rounded-lg overflow-hidden">
-                    {material.fileType.includes('pdf') && (
-                      <iframe
-                        src={`http://localhost:5000${material.fileUrl}#toolbar=0`}
-                        className="w-full h-96"
-                        title={material.fileName}
-                      />
-                    )}
-                    {material.fileType.includes('image') && (
-                      <img
-                        src={`http://localhost:5000${material.fileUrl}`}
-                        alt={material.fileName}
-                        className="w-full h-auto max-h-96 object-contain"
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-center py-12 text-gray-500">
-                    <FileText className="h-12 w-12 mx-auto mb-4" />
-                    <p>Preview not available for this file type</p>
-                    <p className="text-sm">Use the download button to view the file</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <FilePreview
+              fileUrl={`http://localhost:5000${material.fileUrl}`}
+              fileName={material.fileName}
+              fileType={material.fileType}
+              fileSize={material.fileSize}
+              title={material.title}
+              description={material.description}
+            />
           </div>
 
           {/* Sidebar */}
@@ -240,28 +197,28 @@ export default function MaterialDetailPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">File Name:</span>
+                    <span className="text-sm text-muted-foreground">File Name:</span>
                     <span className="text-sm font-medium">{material.fileName}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">File Type:</span>
+                    <span className="text-sm text-muted-foreground">File Type:</span>
                     <span className="text-sm font-medium">{material.fileType}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">File Size:</span>
+                    <span className="text-sm text-muted-foreground">File Size:</span>
                     <span className="text-sm font-medium">{formatFileSize(material.fileSize)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Category:</span>
+                    <span className="text-sm text-muted-foreground">Category:</span>
                     <Badge variant="outline" className="text-xs capitalize">
                       {material.category}
                     </Badge>
                   </div>
                   {fileInfo.lastModified && (
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Last Modified:</span>
+                      <span className="text-sm text-muted-foreground">Last Modified:</span>
                       <span className="text-sm font-medium">
-                        {formatDate(fileInfo.lastModified, 'MMM dd, yyyy')}
+                        {formatDateMedium(fileInfo.lastModified)}
                       </span>
                     </div>
                   )}
@@ -277,8 +234,8 @@ export default function MaterialDetailPage() {
               <CardContent>
                 <div className="space-y-3">
                   <div>
-                    <h3 className="font-medium text-gray-900">{material.course.title}</h3>
-                    <p className="text-sm text-gray-600">Code: {material.course.code}</p>
+                    <h3 className="font-medium text-foreground">{material.course.title}</h3>
+                    <p className="text-sm text-muted-foreground">Code: {material.course.code}</p>
                   </div>
                   <Link href={`/courses/${material.course._id}`}>
                     <Button variant="outline" size="sm" className="w-full">

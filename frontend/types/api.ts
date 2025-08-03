@@ -43,7 +43,7 @@ export interface Material {
   uploadedBy: User;
   category?: string;
   isPublic: boolean;
-  uploadedAt: string;
+  createdAt: string;
 }
 
 export interface Comment {

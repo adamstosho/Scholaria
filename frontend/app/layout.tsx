@@ -29,6 +29,7 @@ export default function RootLayout({
       <head>
         <title>Scholaria - Academic Communication Platform</title>
         <meta name="description" content="Modern academic communication platform for lecturers and students" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className={inter.className}>
         <ErrorBoundary>

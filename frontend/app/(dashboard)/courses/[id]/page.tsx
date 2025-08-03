@@ -20,27 +20,14 @@ import {
   Download,
   Eye
 } from 'lucide-react';
+import { QuickPreview } from '@/components/file-preview/quick-preview';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { format as formatDateFn } from 'date-fns';
-
-// Required for static export
-export async function generateStaticParams() {
-  return [];
-}
+import { formatDateMedium, formatDateShort } from '@/lib/utils';
 
 export default function CourseDetailPage() {
   // Helper function to safely format dates
-  const formatDate = (dateString: string | null | undefined, formatString: string = 'MMM dd') => {
-    if (!dateString) return 'N/A';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return 'N/A';
-      return formatDateFn(date, formatString);
-    } catch (error) {
-      return 'N/A';
-    }
-  };
+
   const params = useParams();
   const courseId = params.id as string;
   const { user } = useAuth();
@@ -50,7 +37,7 @@ export default function CourseDetailPage() {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       </DashboardLayout>
     );
@@ -60,9 +47,9 @@ export default function CourseDetailPage() {
     return (
       <DashboardLayout>
         <div className="text-center py-12">
-          <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Course not found</h3>
-          <p className="text-gray-500 mb-6">The course you're looking for doesn't exist or you don't have access to it.</p>
+          <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">Course not found</h3>
+          <p className="text-muted-foreground mb-6">The course you're looking for doesn't exist or you don't have access to it.</p>
           <Link href="/courses">
             <Button>Back to Courses</Button>
           </Link>
@@ -120,7 +107,7 @@ export default function CourseDetailPage() {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Calendar className="h-4 w-4 mr-1" />
-                  Created {formatDateFn(new Date(course.createdAt), 'MMM yyyy')}
+                  Created {formatDateMedium(course.createdAt)}
                 </div>
               </div>
             </div>
@@ -230,16 +217,16 @@ export default function CourseDetailPage() {
                               <Badge variant="destructive" className="text-xs">Important</Badge>
                             )}
                           </div>
-                          <CardDescription className="flex items-center gap-4 text-sm">
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <User className="h-4 w-4" />
                               {announcement.createdBy.name}
                             </div>
                             <div className="flex items-center gap-1">
                               <Calendar className="h-4 w-4" />
-                              {formatDateFn(new Date(announcement.createdAt), 'MMM dd, yyyy')}
+                              {formatDateMedium(announcement.createdAt)}
                             </div>
-                          </CardDescription>
+                          </div>
                         </div>
                       </div>
                     </CardHeader>
@@ -296,35 +283,42 @@ export default function CourseDetailPage() {
                     <h3 className="text-lg font-medium text-gray-900 mb-4 capitalize">
                       {category} ({categoryMaterials.length})
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        <div className="materials-grid">
                       {categoryMaterials.map((material) => (
-                        <Card key={material._id} className="hover:shadow-lg transition-shadow">
-                    <CardHeader>
+                        <div key={material._id} className="bg-card rounded-lg border border-border shadow-sm hover:shadow-lg transition-all duration-300 material-card overflow-hidden">
+                          {/* Header */}
+                          <div className="p-4 border-b border-border/50 flex-shrink-0">
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
-                                <CardTitle className="text-sm mb-2">{material.title}</CardTitle>
-                                                                  <CardDescription className="text-xs">
-                                   {material.uploadedBy.name} • {formatDate(material.uploadedAt)}
-                                  </CardDescription>
+                                <h3 className="text-sm font-semibold mb-2 text-card-foreground">{material.title}</h3>
+                                <p className="text-xs text-muted-foreground">
+                                   {material.uploadedBy.name} • {formatDateShort(material.createdAt)}
+                                </p>
                               </div>
                               <span className="text-2xl">{getFileIcon(material.fileType)}</span>
                             </div>
-                    </CardHeader>
-                    <CardContent>
-                            <div className="space-y-2">
-                              <div className="text-xs text-gray-500">
-                                {material.fileName} • {formatFileSize(material.fileSize)}
-                      </div>
-                              <div className="flex gap-2">
-                      <Button
-                        variant="outline"
+                          </div>
+                          {/* Content */}
+                          <div className="p-4 material-card-content">
+                            <div className="space-y-3 flex-1">
+                              <QuickPreview
+                                fileUrl={`http://localhost:5000${material.fileUrl}`}
+                                fileName={material.fileName}
+                                fileType={material.fileType}
+                                fileSize={material.fileSize}
+                                className="text-xs"
+                                showActions={false}
+                              />
+                              <div className="flex gap-2 material-card-actions">
+                                <Button
+                                  variant="outline"
                                   size="sm"
                                   className="flex-1"
                                   onClick={() => window.open(`http://localhost:5000${material.fileUrl}`, '_blank')}
-                      >
+                                >
                                   <Download className="mr-1 h-3 w-3" />
-                        Download
-                      </Button>
+                                  Download
+                                </Button>
                                 <Link href={`/materials/${material._id}`}>
                                   <Button variant="outline" size="sm">
                                     <Eye className="h-3 w-3" />
@@ -332,8 +326,8 @@ export default function CourseDetailPage() {
                                 </Link>
                               </div>
                             </div>
-                    </CardContent>
-                  </Card>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>

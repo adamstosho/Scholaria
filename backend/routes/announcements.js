@@ -33,6 +33,21 @@ const announcementValidation = [
     .withMessage('isImportant must be a boolean')
 ];
 
+const updateAnnouncementValidation = [
+  body('title')
+    .trim()
+    .isLength({ min: 3, max: 200 })
+    .withMessage('Title must be between 3 and 200 characters'),
+  body('body')
+    .trim()
+    .isLength({ min: 10, max: 2000 })
+    .withMessage('Content must be between 10 and 2000 characters'),
+  body('isImportant')
+    .optional()
+    .isBoolean()
+    .withMessage('isImportant must be a boolean')
+];
+
 const idValidation = [
   param('id')
     .isMongoId()
@@ -54,7 +69,7 @@ router.post('/', authorize('lecturer'), announcementValidation, validate, create
 router.get('/:courseId', courseIdValidation, validate, getAnnouncementsByCourse);
 router.get('/detail/:id', idValidation, validate, getAnnouncement);
 router.get('/:id/with-comments', idValidation, validate, getAnnouncementWithComments);
-router.put('/:id', authorize('lecturer'), idValidation, announcementValidation, validate, updateAnnouncement);
+router.put('/:id', authorize('lecturer'), idValidation, updateAnnouncementValidation, validate, updateAnnouncement);
 router.delete('/:id', authorize('lecturer'), idValidation, validate, deleteAnnouncement);
 
 module.exports = router; 

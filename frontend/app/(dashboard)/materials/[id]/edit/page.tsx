@@ -24,11 +24,7 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-
-// Required for static export
-export async function generateStaticParams() {
-  return [];
-}
+import { formatDateFull } from '@/lib/utils';
 
 const materialSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(100, 'Title must be less than 100 characters'),
@@ -49,17 +45,7 @@ const categories = [
 ];
 
 export default function EditMaterialPage() {
-  // Helper function to safely format dates
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return 'N/A';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return 'N/A';
-      return date.toLocaleDateString();
-    } catch (error) {
-      return 'N/A';
-    }
-  };
+
   const params = useParams();
   const router = useRouter();
   const materialId = params.id as string;
@@ -295,9 +281,9 @@ export default function EditMaterialPage() {
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Uploaded:</span>
-                    <p className="text-sm font-medium">
-                      {formatDate(material.uploadedAt)}
-                    </p>
+                                          <p className="text-sm font-medium">
+                        {formatDateFull(material.createdAt)}
+                      </p>
                   </div>
                 </div>
                 <div className="pt-4 border-t">

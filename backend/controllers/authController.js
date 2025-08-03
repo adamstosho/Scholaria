@@ -33,10 +33,14 @@ const register = async (req, res, next) => {
       message: 'User registered successfully',
       data: {
         user: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           email: user.email,
-          role: user.role
+          role: user.role,
+          enrolledCourses: user.enrolledCourses,
+          createdCourses: user.createdCourses,
+          avatar: user.avatar,
+          createdAt: user.createdAt
         },
         token
       }
@@ -87,10 +91,14 @@ const login = async (req, res, next) => {
       message: 'Login successful',
       data: {
         user: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           email: user.email,
-          role: user.role
+          role: user.role,
+          enrolledCourses: user.enrolledCourses,
+          createdCourses: user.createdCourses,
+          avatar: user.avatar,
+          createdAt: user.createdAt
         },
         token
       }

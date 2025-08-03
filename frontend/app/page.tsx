@@ -2,15 +2,20 @@
 
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Users, FileText, Megaphone } from 'lucide-react';
+import { Users, FileText, Megaphone, BookOpen, GraduationCap, MessageSquare, Shield, Zap, CheckCircle, ArrowRight, Play, Star, Globe, Clock, Sparkles, Target, Award, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
 export default function HomePage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1000], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 300, 600], [1, 0.8, 0]);
 
   useEffect(() => {
     if (!isLoading && user) {
@@ -20,8 +25,29 @@ export default function HomePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <motion.div 
+          className="flex flex-col items-center space-y-4"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="relative">
+            <Image 
+              src="/logo.svg" 
+              alt="Scholaria Logo" 
+              width={64} 
+              height={64} 
+              className="animate-pulse"
+            />
+            <motion.div
+              className="absolute inset-0 rounded-full border-4 border-blue-200"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            />
+          </div>
+          <p className="text-lg font-semibold text-gray-700">Loading Scholaria...</p>
+        </motion.div>
       </div>
     );
   }
@@ -31,74 +57,296 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-emerald-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -50, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div
+          className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, -80, 0],
+            y: [0, 60, 0],
+            scale: [1, 0.9, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 left-1/3 w-80 h-80 bg-gradient-to-r from-pink-400/20 to-rose-400/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, 60, 0],
+            y: [0, -40, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </div>
+
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <motion.header 
+        className="relative bg-white/80 backdrop-blur-md shadow-sm border-b border-white/20 z-50"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">Scholaria</span>
-            </div>
+            <motion.div 
+              className="flex items-center space-x-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <Image 
+                src="/logo.svg" 
+                alt="Scholaria Logo" 
+                width={32} 
+                height={32} 
+                className="h-8 w-8"
+              />
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Scholaria
+              </span>
+            </motion.div>
             <div className="flex items-center space-x-4">
               <Link href="/login">
-                <Button variant="outline">Sign In</Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">
+                    Sign In
+                  </Button>
+                </motion.div>
               </Link>
               <Link href="/register">
-                <Button>Get Started</Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
+                    Get Started
+                  </Button>
+                </motion.div>
               </Link>
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Hero Section */}
-      <section className="py-20">
+      <section className="relative py-32 lg:py-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Modern Academic
-              <span className="text-blue-600"> Communication</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Streamline communication between lecturers and students with our comprehensive 
-              platform for announcements, materials, and course management.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register">
-                <Button size="lg" className="w-full sm:w-auto">
-                  Start Learning Today
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  Join as Lecturer
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <motion.div 
+              className="text-center lg:text-left"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <motion.div
+                className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Revolutionizing Academic Communication
+              </motion.div>
+              
+              <motion.h1 
+                className="text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                Modern
+                <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
+                  Academic
+                </span>
+                Communication
+              </motion.h1>
+              
+              <motion.p 
+                className="text-xl text-gray-600 mb-8 max-w-2xl lg:max-w-none leading-relaxed"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+              >
+                Transform the way lecturers and students connect. Our comprehensive platform 
+                streamlines announcements, materials, and course management with cutting-edge technology.
+              </motion.p>
+              
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1 }}
+              >
+                <Link href="/register">
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-xl text-lg px-8 py-6">
+                      Start Learning Today
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </motion.div>
+                </Link>
+                <Link href="/register">
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button size="lg" variant="outline" className="border-2 border-gray-300 hover:border-blue-600 text-lg px-8 py-6">
+                      <Play className="mr-2 h-5 w-5" />
+                      Watch Demo
+                    </Button>
+                  </motion.div>
+                </Link>
+              </motion.div>
+
+              {/* Stats */}
+              <motion.div 
+                className="flex justify-center lg:justify-start space-x-8 mt-12"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+              >
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gray-900">10K+</div>
+                  <div className="text-sm text-gray-600">Active Students</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gray-900">500+</div>
+                  <div className="text-sm text-gray-600">Lecturers</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gray-900">99%</div>
+                  <div className="text-sm text-gray-600">Satisfaction</div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Content - Hero Visual */}
+            <motion.div 
+              className="relative"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
+                <motion.div
+                  className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Sparkles className="w-4 h-4 text-white" />
+                </motion.div>
+                
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <motion.div 
+                    className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4"
+                    whileHover={{ scale: 1.05, rotate: 2 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <BookOpen className="w-8 h-8 text-blue-600 mb-2" />
+                    <h3 className="font-semibold text-gray-800">Course Management</h3>
+                    <p className="text-sm text-gray-600">Organize content seamlessly</p>
+                  </motion.div>
+                  
+                  <motion.div 
+                    className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4"
+                    whileHover={{ scale: 1.05, rotate: -2 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <Megaphone className="w-8 h-8 text-purple-600 mb-2" />
+                    <h3 className="font-semibold text-gray-800">Announcements</h3>
+                    <p className="text-sm text-gray-600">Instant communication</p>
+                  </motion.div>
+                  
+                  <motion.div 
+                    className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-4"
+                    whileHover={{ scale: 1.05, rotate: 2 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <FileText className="w-8 h-8 text-emerald-600 mb-2" />
+                    <h3 className="font-semibold text-gray-800">Materials</h3>
+                    <p className="text-sm text-gray-600">Easy file sharing</p>
+                  </motion.div>
+                  
+                  <motion.div 
+                    className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4"
+                    whileHover={{ scale: 1.05, rotate: -2 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <MessageSquare className="w-8 h-8 text-orange-600 mb-2" />
+                    <h3 className="font-semibold text-gray-800">Discussions</h3>
+                    <p className="text-sm text-gray-600">Interactive learning</p>
+                  </motion.div>
+                </div>
+                
+                <motion.div 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-4 text-white"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold">Real-time Updates</h3>
+                      <p className="text-sm text-blue-100">Stay connected 24/7</p>
+                    </div>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Globe className="w-6 h-6" />
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-32 bg-white/50 backdrop-blur-sm relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Everything You Need for Academic Success
+            <motion.div
+              className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 text-sm font-medium mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Target className="w-4 h-4 mr-2" />
+              Powerful Features
+            </motion.div>
+            
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Everything You Need for
+              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Academic Success
+              </span>
             </h2>
-            <p className="text-lg text-gray-600">
-              Powerful features designed for modern education
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Comprehensive tools designed to enhance the learning experience for both educators and students
             </p>
           </motion.div>
 
@@ -108,37 +356,127 @@ export default function HomePage() {
                 icon: BookOpen,
                 title: 'Course Management',
                 description: 'Create and manage courses with ease. Organize content and track student progress.',
+                color: 'blue',
+                gradient: 'from-blue-500 to-blue-600'
               },
               {
                 icon: Megaphone,
-                title: 'Announcements',
+                title: 'Smart Announcements',
                 description: 'Share important updates and announcements with your students instantly.',
+                color: 'purple',
+                gradient: 'from-purple-500 to-purple-600'
               },
               {
                 icon: FileText,
                 title: 'Materials Library',
                 description: 'Upload and organize course materials. Students can access them anytime.',
+                color: 'emerald',
+                gradient: 'from-emerald-500 to-emerald-600'
               },
               {
-                icon: Users,
+                icon: MessageSquare,
                 title: 'Interactive Discussions',
                 description: 'Foster engagement with comment systems and real-time discussions.',
+                color: 'orange',
+                gradient: 'from-orange-500 to-orange-600'
               },
             ].map((feature, index) => (
               <motion.div
                 key={feature.title}
-                className="text-center p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-2xl transition-all duration-300"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10, scale: 1.02 }}
               >
-                <feature.icon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <motion.div
+                  className={`w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+                  whileHover={{ rotate: 5 }}
+                >
+                  <feature.icon className="h-8 w-8 text-white" />
+                </motion.div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 leading-relaxed">
                   {feature.description}
                 </p>
+                <motion.div
+                  className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                  initial={{ x: 20 }}
+                  whileHover={{ x: 0 }}
+                >
+                  <ArrowRight className="w-5 h-5 text-blue-600" />
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-32 bg-gradient-to-br from-blue-600 to-purple-700 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div 
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              Trusted by Educators
+              <span className="block">Worldwide</span>
+            </h2>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              See what lecturers and students are saying about their experience with Scholaria
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Dr. D. O., Opaleke",
+                role: "Professor of  Nutrition",
+                content: "Scholaria has transformed how I interact with my students. The platform is intuitive and powerful.",
+                rating: 5
+              },
+              {
+                name: "Muhammad Fatimah",
+                role: "Student",
+                content: "Finally, a platform that makes learning accessible and engaging. The materials are always up-to-date.",
+                rating: 5
+              },
+              {
+                name: "Prof. T. T., Adebisi",
+                role: "Department Head",
+                content: "The announcement system is a game-changer. My students never miss important updates anymore.",
+                rating: 5
+              }
+            ].map((testimonial, index) => (
+              <motion.div
+                key={testimonial.name}
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-white/90 mb-6 leading-relaxed">
+                  "{testimonial.content}"
+                </p>
+                <div>
+                  <div className="font-semibold text-white">{testimonial.name}</div>
+                  <div className="text-blue-200 text-sm">{testimonial.role}</div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -146,41 +484,134 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-32 bg-gradient-to-br from-gray-900 to-gray-800 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div 
             className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to Transform Your Academic Experience?
+            <motion.div
+              className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Award className="w-4 h-4 mr-2" />
+              Join the Revolution
+            </motion.div>
+            
+            <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6">
+              Ready to Transform Your
+              <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Academic Experience?
+              </span>
             </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Join thousands of educators and students using Scholaria
+            <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
+              Join thousands of educators and students who are already using Scholaria to enhance their learning journey
             </p>
-            <Link href="/register">
-              <Button size="lg" variant="secondary">
-                Get Started for Free
-              </Button>
-            </Link>
+            
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-6 justify-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <Link href="/register">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-2xl text-lg px-10 py-6">
+                    Get Started for Free
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </motion.div>
+              </Link>
+              <Link href="/login">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button size="lg" variant="outline" className="bg-blue-200 border-2 border-white/30 hover:border-white text-white hover:bg-white/10 text-lg px-10 py-6">
+                    Sign In Now
+                  </Button>
+                </motion.div>
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-16 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <BookOpen className="h-6 w-6" />
-              <span className="text-lg font-bold">Scholaria</span>
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="col-span-2">
+              <motion.div 
+                className="flex items-center space-x-2 mb-6"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <Image 
+                  src="/logo.svg" 
+                  alt="Scholaria Logo" 
+                  width={32} 
+                  height={32} 
+                  className="h-8 w-8"
+                />
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  Scholaria
+                </span>
+              </motion.div>
+              <p className="text-gray-400 mb-6 max-w-md">
+                Revolutionizing academic communication with modern technology and intuitive design.
+              </p>
+              <div className="flex space-x-4">
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                  <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                    <Globe className="w-5 h-5" />
+                  </div>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                  <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                </motion.div>
+              </div>
             </div>
-            <p className="text-gray-400">
-              © 2024 Scholaria. All rights reserved.
-            </p>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Product</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">API</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Support</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Status</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+              </ul>
+            </div>
           </div>
+          
+          <motion.div 
+            className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <p>© 2025 Scholaria. All rights reserved. Built with ❤️ by ART_Redox for education.</p>
+          </motion.div>
         </div>
       </footer>
     </div>

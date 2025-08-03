@@ -5,6 +5,7 @@ const validate = require('../middleware/validate');
 const {
   createCourse,
   getCourses,
+  getUserCourses,
   getCourse,
   getCourseDetails,
   updateCourse,
@@ -42,6 +43,7 @@ router.use(protect);
 // Routes
 router.post('/', authorize('lecturer'), courseValidation, validate, createCourse);
 router.get('/', getCourses);
+router.get('/user/my-courses', getUserCourses);
 router.get('/:id', courseIdValidation, validate, getCourse);
 router.get('/:id/details', courseIdValidation, validate, getCourseDetails);
 router.put('/:id', authorize('lecturer'), courseIdValidation, courseValidation, validate, updateCourse);

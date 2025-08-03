@@ -33,8 +33,24 @@ const materialValidation = [
     .withMessage('Invalid course ID'),
   body('category')
     .optional()
-    .isIn(['lecture', 'assignment', 'reading', 'other'])
-    .withMessage('Invalid category')
+    .isString()
+    .withMessage('Category must be a string')
+];
+
+const updateMaterialValidation = [
+  body('title')
+    .trim()
+    .isLength({ min: 3, max: 200 })
+    .withMessage('Title must be between 3 and 200 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Description cannot exceed 500 characters'),
+  body('category')
+    .optional()
+    .isString()
+    .withMessage('Category must be a string')
 ];
 
 const idValidation = [
@@ -58,7 +74,7 @@ router.post('/upload', authorize('lecturer'), uploadSingle, materialValidation, 
 router.get('/:courseId', courseIdValidation, validate, getMaterialsByCourse);
 router.get('/detail/:id', idValidation, validate, getMaterial);
 router.get('/:id/details', idValidation, validate, getMaterialDetails);
-router.put('/:id', authorize('lecturer'), idValidation, materialValidation, validate, updateMaterial);
+router.put('/:id', authorize('lecturer'), idValidation, updateMaterialValidation, validate, updateMaterial);
 router.delete('/:id', authorize('lecturer'), idValidation, validate, deleteMaterial);
 router.get('/download/:id', idValidation, validate, downloadMaterial);
 router.get('/preview/:id', idValidation, validate, previewMaterial);

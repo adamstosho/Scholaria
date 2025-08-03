@@ -37,7 +37,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await api.get('/auth/me');
       console.log('User fetch response:', response.data);
       // The /auth/me endpoint returns the user directly in data.data
-      setUser(response.data.data);
+      const userData = response.data.data;
+      setUser(userData);
     } catch (error) {
       console.error('Error fetching user:', error);
       logout();
@@ -54,7 +55,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('Setting user:', data.user);
     console.log('Setting token:', data.token);
     
-    setUser(data.user);
+    // Ensure user object has the correct structure
+    const userData = {
+      ...data.user,
+      _id: data.user._id || data.user.id // Handle both _id and id for backward compatibility
+    };
+    
+    setUser(userData);
     setToken(data.token);
     localStorage.setItem('token', data.token);
     api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
@@ -68,7 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('Setting user:', data.user);
     console.log('Setting token:', data.token);
     
-    setUser(data.user);
+    // Ensure user object has the correct structure
+    const userData = {
+      ...data.user,
+      _id: data.user._id || data.user.id // Handle both _id and id for backward compatibility
+    };
+    
+    setUser(userData);
     setToken(data.token);
     localStorage.setItem('token', data.token);
     api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;

@@ -10,22 +10,14 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileText, Search, Calendar, User, BookOpen, Plus, Download, File, Folder } from 'lucide-react';
+import { QuickPreview } from '@/components/file-preview/quick-preview';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { format as formatDateFn } from 'date-fns';
+import { formatDateShort } from '@/lib/utils';
 
 export default function MaterialsPage() {
   // Helper function to safely format dates
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return 'N/A';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return 'N/A';
-      return formatDateFn(date, 'MMM dd');
-    } catch (error) {
-      return 'N/A';
-    }
-  };
+
   const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
@@ -38,10 +30,12 @@ export default function MaterialsPage() {
 
   const categories = [
     { value: 'all', label: 'All Categories' },
-    { value: 'lecture', label: 'Lecture Notes' },
-    { value: 'assignment', label: 'Assignments' },
-    { value: 'reading', label: 'Readings' },
-    { value: 'exam', label: 'Exams' },
+    { value: 'lecture-notes', label: 'Lecture Notes' },
+    { value: 'assignments', label: 'Assignments' },
+    { value: 'readings', label: 'Readings' },
+    { value: 'syllabus', label: 'Syllabus' },
+    { value: 'exams', label: 'Exams' },
+    { value: 'resources', label: 'Resources' },
     { value: 'other', label: 'Other' }
   ];
 
@@ -68,19 +62,33 @@ export default function MaterialsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Course Materials</h1>
-            <p className="text-gray-600 mt-2">
-              {isLecturer ? 'Manage and share course materials' : 'Access your course materials'}
-            </p>
+            <motion.h1 
+              className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              Course Materials
+            </motion.h1>
+            <motion.p 
+              className="text-lg text-gray-600 mt-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              {isLecturer ? 'Manage and share course materials effectively' : 'Access your course materials easily'}
+            </motion.p>
           </div>
           {isLecturer && (
             <Link href="/materials/upload">
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Upload Material
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Upload Material
+                </Button>
+              </motion.div>
             </Link>
           )}
         </div>
@@ -89,7 +97,7 @@ export default function MaterialsPage() {
         <div className="mb-8 space-y-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search materials..."
                 value={search}
@@ -114,9 +122,9 @@ export default function MaterialsPage() {
 
         {/* Materials Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(6)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
+              <Card key={i} className="animate-pulse h-80">
                 <CardHeader>
                   <div className="h-6 bg-gray-200 rounded mb-2"></div>
                   <div className="h-4 bg-gray-200 rounded w-2/3"></div>
@@ -129,21 +137,25 @@ export default function MaterialsPage() {
             ))}
           </div>
         ) : materials.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="materials-grid">
             {materials.map((material, index) => (
               <motion.div
                 key={material._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="h-full"
               >
-                <Card className="h-full hover:shadow-lg transition-shadow duration-300">
-                  <CardHeader>
+                <div className="bg-card rounded-lg border border-border shadow-sm hover:shadow-lg transition-all duration-300 material-card overflow-hidden">
+                  {/* Header */}
+                  <div className="p-4 border-b border-border/50 flex-shrink-0">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base sm:text-lg mb-2 truncate">{material.title}</CardTitle>
-                        <div className="text-sm text-muted-foreground flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-                          <div className="flex items-center gap-1">
+                        <h3 className="text-base sm:text-lg font-semibold mb-2 truncate text-card-foreground">
+                          {material.title}
+                        </h3>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
                             <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
                             <span className="truncate">{material.course.title}</span>
                           </div>
@@ -154,40 +166,43 @@ export default function MaterialsPage() {
                           )}
                         </div>
                       </div>
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
-                        <span className="text-lg sm:text-2xl">{getFileIcon(material.fileType)}</span>
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent rounded-lg flex items-center justify-center flex-shrink-0 ml-2 border border-accent/50">
+                        <span className="text-lg sm:text-2xl text-accent-foreground">{getFileIcon(material.fileType)}</span>
                       </div>
                     </div>
-                  </CardHeader>
-                  <CardContent>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-4 material-card-content">
                     {material.description && (
-                      <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
                         {material.description}
                       </p>
                     )}
                     
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
-                        <div className="flex items-center gap-1 truncate">
-                          <File className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                          <span className="truncate">{material.fileName}</span>
-                        </div>
-                        <span className="flex-shrink-0">{formatFileSize(material.fileSize)}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
+                    <div className="space-y-3 mb-4 flex-1">
+                      <QuickPreview
+                        fileUrl={`http://localhost:5000${material.fileUrl}`}
+                        fileName={material.fileName}
+                        fileType={material.fileType}
+                        fileSize={material.fileSize}
+                        className="text-sm"
+                      />
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
                         <div className="flex items-center gap-1 truncate">
                           <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                           <span className="truncate">{material.uploadedBy.name}</span>
                         </div>
                         <div className="flex items-center gap-1 flex-shrink-0">
                           <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-                          <span className="hidden sm:inline">{formatDate(material.uploadedAt)}</span>
-                          <span className="sm:hidden">{formatDate(material.uploadedAt, 'MMM dd')}</span>
+                                                                            <span className="hidden sm:inline">{formatDateShort(material.createdAt)}</span>
+                          <span className="sm:hidden">{formatDateShort(material.createdAt)}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    {/* Actions */}
+                    <div className="flex flex-col sm:flex-row gap-2 material-card-actions">
                       <Button
                         variant="outline"
                         size="sm"
@@ -212,18 +227,18 @@ export default function MaterialsPage() {
                         </Link>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
         ) : (
           <div className="text-center py-12">
-            <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">
               {search || category ? 'No materials found' : 'No materials available'}
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-muted-foreground mb-6">
               {search || category 
                 ? 'Try adjusting your search terms or filters'
                 : isLecturer 

@@ -6,6 +6,7 @@ import { Sidebar } from './sidebar';
 import { ProtectedRoute } from './protected-route';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -17,45 +18,77 @@ export function DashboardLayout({ children, requireRole }: DashboardLayoutProps)
 
   return (
     <ProtectedRoute requireRole={requireRole}>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
+        {/* Animated background elements */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/5 to-purple-400/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-emerald-400/5 to-teal-400/5 rounded-full blur-3xl"></div>
+        </div>
+
         <Header onMenuClick={() => setSidebarOpen(true)} />
         
         {/* Mobile sidebar overlay */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
+        <AnimatePresence>
+          {sidebarOpen && (
+            <motion.div 
+              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+        </AnimatePresence>
         
-        <div className="flex">
-          {/* Desktop sidebar */}
-          <div className="hidden lg:block">
-            <Sidebar />
-          </div>
-          
-          {/* Mobile sidebar */}
-          <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:hidden ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}>
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-lg font-semibold">Menu</h2>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarOpen(false)}
-              >
-                <X className="h-5 w-5" />
-              </Button>
+        {/* Add top padding to account for fixed header */}
+        <div className="pt-16">
+          <div className="flex">
+            {/* Desktop sidebar - Fixed */}
+            <div className="hidden lg:block fixed left-0 top-16 h-[calc(100vh-4rem)] z-30">
+              <Sidebar />
             </div>
-            <Sidebar onItemClick={() => setSidebarOpen(false)} />
-          </div>
           
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto">
-              {children}
-            </div>
-          </main>
+                      {/* Mobile sidebar */}
+            <AnimatePresence>
+              {sidebarOpen && (
+                <motion.div 
+                  className="fixed inset-y-0 left-0 top-0 z-50 w-72 bg-white/95 backdrop-blur-md shadow-2xl border-r border-gray-200/50 lg:hidden"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '-100%' }}
+                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                >
+                  <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
+                    <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      Scholaria
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSidebarOpen(false)}
+                      className="hover:bg-gray-100"
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
+                  <Sidebar onItemClick={() => setSidebarOpen(false)} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          
+            {/* Main content - with proper spacing for fixed sidebar */}
+            <main className="flex-1 p-6 sm:p-8 lg:p-10 lg:ml-72">
+              <div className="max-w-7xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {children}
+                </motion.div>
+              </div>
+            </main>
+          </div>
         </div>
       </div>
     </ProtectedRoute>

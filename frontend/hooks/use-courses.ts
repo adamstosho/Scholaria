@@ -19,6 +19,20 @@ export function useCourses(page: number = 1, limit: number = 10, search?: string
   });
 }
 
+export function useUserCourses(page: number = 1, limit: number = 10) {
+  return useQuery<PaginatedResponse<Course>>({
+    queryKey: ['user-courses', page, limit],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+      const response = await api.get(`/courses/user/my-courses?${params}`);
+      return response.data;
+    },
+  });
+}
+
 export function useCourse(id: string) {
   return useQuery<ApiResponse<Course>>({
     queryKey: ['course', id],

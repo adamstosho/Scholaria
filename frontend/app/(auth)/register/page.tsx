@@ -11,8 +11,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -43,7 +44,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-emerald-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-accent to-secondary/20 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,8 +53,14 @@ export default function RegisterPage() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold">Scholaria</span>
+              <Image 
+                src="/logo.svg" 
+                alt="Scholaria Logo" 
+                width={32} 
+                height={32} 
+                className="h-8 w-8"
+              />
+              <span className="text-2xl font-bold text-foreground">Scholaria</span>
             </div>
             <CardTitle className="text-2xl">Create your account</CardTitle>
             <CardDescription>
@@ -132,9 +139,9 @@ export default function RegisterPage() {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Already have an account?{' '}
-                <Link href="/login" className="text-blue-600 hover:underline">
+                <Link href="/login" className="text-primary hover:underline">
                   Sign in
                 </Link>
               </p>

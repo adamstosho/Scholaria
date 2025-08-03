@@ -4,9 +4,10 @@ import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { BookOpen, LogOut, User, Settings, Menu } from 'lucide-react';
+import { LogOut, User, Settings, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -17,10 +18,10 @@ export function Header({ onMenuClick }: HeaderProps) {
 
   return (
     <motion.header 
-      className="bg-white shadow-sm border-b border-gray-200"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.3 }}
+      className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200/50 z-50"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -36,13 +37,19 @@ export function Header({ onMenuClick }: HeaderProps) {
             </Button>
             
             <Link href="/dashboard" className="flex items-center space-x-2">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">Scholaria</span>
+              <Image 
+                src="/logo.svg" 
+                alt="Scholaria Logo" 
+                width={32} 
+                height={32} 
+                className="h-8 w-8"
+              />
+              <span className="text-xl font-bold text-foreground">Scholaria</span>
             </Link>
           </div>
 
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-600 hidden sm:block">
+            <span className="text-sm text-muted-foreground hidden sm:block">
               Welcome, {user?.name}
             </span>
             
@@ -50,7 +57,7 @@ export function Header({ onMenuClick }: HeaderProps) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-blue-100 text-blue-600">
+                    <AvatarFallback className="bg-accent text-accent-foreground">
                       {user?.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>

@@ -257,6 +257,48 @@ const deleteCourse = async (req, res, next) => {
   }
 };
 
+// @desc    Get user courses
+// @route   GET /api/v1/courses/user/my-courses
+// @access  Private
+const getUserCourses = async (req, res, next) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    let query = { isActive: true };
+
+    // Filter based on user role
+    if (req.user.role === 'lecturer') {
+      // Get courses created by the lecturer
+      query.lecturer = req.user.id;
+    } else {
+      // Get courses where student is enrolled
+      query.students = req.user.id;
+    }
+
+    const courses = await Course.find(query)
+      .populate('lecturer', 'name email')
+      .populate('students', 'name email')
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 });
+
+    const total = await Course.countDocuments(query);
+
+    res.status(200).json({
+      success: true,
+      data: courses,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / limit),
+        totalItems: total,
+        itemsPerPage: parseInt(limit)
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Enroll in course
 // @route   POST /api/v1/courses/:id/enroll
 // @access  Private (Students only)
@@ -303,6 +345,7 @@ const enrollInCourse = async (req, res, next) => {
 module.exports = {
   createCourse,
   getCourses,
+  getUserCourses,
   getCourse,
   getCourseDetails,
   updateCourse,

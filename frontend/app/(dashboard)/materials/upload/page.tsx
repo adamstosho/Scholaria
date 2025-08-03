@@ -104,10 +104,12 @@ export default function UploadMaterialPage() {
   const courses = coursesData?.data || [];
 
   const categories = [
-    { value: 'lecture', label: 'Lecture Notes' },
-    { value: 'assignment', label: 'Assignments' },
-    { value: 'reading', label: 'Readings' },
-    { value: 'exam', label: 'Exams' },
+    { value: 'lecture-notes', label: 'Lecture Notes' },
+    { value: 'assignments', label: 'Assignments' },
+    { value: 'readings', label: 'Readings' },
+    { value: 'syllabus', label: 'Syllabus' },
+    { value: 'exams', label: 'Exams' },
+    { value: 'resources', label: 'Resources' },
     { value: 'other', label: 'Other' }
   ];
 

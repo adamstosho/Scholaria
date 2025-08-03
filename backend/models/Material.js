@@ -39,7 +39,6 @@ const materialSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['lecture', 'assignment', 'reading', 'other'],
     default: 'other'
   },
   isPublic: {

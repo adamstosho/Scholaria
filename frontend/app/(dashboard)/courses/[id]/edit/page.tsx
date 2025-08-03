@@ -24,11 +24,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-// Required for static export
-export async function generateStaticParams() {
-  return [];
-}
-
 const courseSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(100, 'Title must be less than 100 characters'),
   code: z.string().min(2, 'Code must be at least 2 characters').max(20, 'Code must be less than 20 characters'),
@@ -80,7 +75,7 @@ export default function EditCoursePage() {
         <div className="text-center py-12">
           <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">Course not found</h3>
-          <p className="text-gray-500 mb-6">The course you're trying to edit doesn't exist or you don't have access to it.</p>
+          <p className="text-gray-500 mb-6">The course you&apos;re trying to edit doesn&apos;t exist or you don&apos;t have access to it.</p>
           <Link href="/courses">
             <Button>Back to Courses</Button>
           </Link>
@@ -99,7 +94,7 @@ export default function EditCoursePage() {
         <div className="text-center py-12">
           <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">Access Denied</h3>
-          <p className="text-gray-500 mb-6">You don't have permission to edit this course.</p>
+          <p className="text-gray-500 mb-6">You don&apos;t have permission to edit this course.</p>
           <Link href="/courses">
             <Button>Back to Courses</Button>
           </Link>
