@@ -71,9 +71,15 @@ app.use('*', (req, res) => {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Scholaria server running on port ${PORT}`);
-  console.log(`📚 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/api/v1/health`);
-  console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
-});
+
+// For Vercel serverless deployment
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Scholaria server running on port ${PORT}`);
+    console.log(`📚 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔗 Health check: http://localhost:${PORT}/api/v1/health`);
+    console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
+  });
+}
+
+module.exports = app;
