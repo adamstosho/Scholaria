@@ -4,6 +4,18 @@
 
 Scholaria is a modern web application designed to improve communication between lecturers and students in educational institutions. It provides a centralized platform where lecturers can share course materials, make announcements, and manage their courses, while students can easily access learning resources and stay updated with important information.
 
+# KINDLY NOTE THAT YOU ARE TO LOGIN/REGISTER AS BOTH LECTURER AND STUDENT TO SEE HOW THE APP. WORKS - 
+{
+   **SAMPLE CREDENTIALS**
+   FOR LECTURER, USE - 
+   adam@gmail.com or sadat@gmail.com
+   adam123
+
+   FOR STUDENT, USE -
+   basit@gmail.com
+   adam123
+}
+
 ## Problem Statement
 
 Traditional academic communication often relies on scattered methods like email, physical handouts, or basic learning management systems that can be difficult to navigate. This leads to:
@@ -37,6 +49,19 @@ Scholaria solves these problems by providing a user-friendly, organized platform
 - **Search Functionality**: Quick search through courses, announcements, and materials
 - **User Authentication**: Secure login and registration system
 - **Role-based Access**: Different interfaces for lecturers and students
+
+# KINDLY NOTE THAT YOU ARE TO LOGIN/REGISTER AS BOTH LECTURER AND STUDENT TO SEE HOW THE APP. WORKS - 
+{
+   **SAMPLE CREDENTIALS**
+   FOR LECTURER, USE - 
+   adam@gmail.com or sadat@gmail.com
+   adam123
+
+   FOR STUDENT, USE -
+   basit@gmail.com
+   adam123
+}
+
 
 ## How to Use Scholaria
 
@@ -107,6 +132,19 @@ Scholaria solves these problems by providing a user-friendly, organized platform
 - **Materials**: Access and upload course materials
 - **Profile**: Update your account information and settings
 
+
+# KINDLY NOTE THAT YOU ARE TO LOGIN/REGISTER AS BOTH LECTURER AND STUDENT TO SEE HOW THE APP. WORKS - 
+{
+   **SAMPLE CREDENTIALS**
+   FOR LECTURER, USE - 
+   adam@gmail.com or sadat@gmail.com
+   adam123
+
+   FOR STUDENT, USE -
+   basit@gmail.com
+   adam123
+}
+
 ## Technical Details
 
 ### Frontend Technologies
@@ -146,6 +184,19 @@ Scholaria solves these problems by providing a user-friendly, organized platform
 - Node.js (version 18 or higher)
 - npm or yarn package manager
 - MongoDB database (local or cloud)
+
+# KINDLY NOTE THAT YOU ARE TO LOGIN/REGISTER AS BOTH LECTURER AND STUDENT TO SEE HOW THE APP. WORKS - 
+{
+   **SAMPLE CREDENTIALS**
+   FOR LECTURER, USE - 
+   adam@gmail.com or sadat@gmail.com
+   adam123
+
+   FOR STUDENT, USE -
+   basit@gmail.com
+   adam123
+}
+
 
 ### Frontend Setup
 ```bash
@@ -192,6 +243,18 @@ JWT_SECRET=your_jwt_secret_key
 CORS_ORIGIN=http://localhost:3000
 NODE_ENV=development
 ```
+
+# KINDLY NOTE THAT YOU ARE TO LOGIN/REGISTER AS BOTH LECTURER AND STUDENT TO SEE HOW THE APP. WORKS - 
+{
+   **SAMPLE CREDENTIALS**
+   FOR LECTURER, USE - 
+   adam@gmail.com or sadat@gmail.com
+   adam123
+
+   FOR STUDENT, USE -
+   basit@gmail.com
+   adam123
+}
 
 
 # Preview of the App Interface 
