@@ -2,7 +2,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 export const api = axios.create({
-  baseURL: 'https://scholaria-1.onrender.com/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://scholaria-backend.vercel.app/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
