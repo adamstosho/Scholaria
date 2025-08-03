@@ -193,6 +193,47 @@ CORS_ORIGIN=http://localhost:3000
 NODE_ENV=development
 ```
 
+
+# Preview of the App Interface 
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-2025-08-03-18_49_00.png)
+Landing Page of the App
+
+
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-register-2025-08-03-18_49_19.png)
+Register Page
+
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-login-2025-08-03-18_49_13.png)
+Login Page
+
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-dashboard-2025-08-03-18_49_33.png)
+Lecturer  Dashboard
+
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-dashboard-2025-08-03-18_50_38.png)
+
+Student Dashboard
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-courses-2025-08-03-18_49_41.png)
+Courses list for the lecturer
+
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-courses-2025-08-03-18_50_52.png)
+Courses list for student
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-courses-create-2025-08-03-18_49_49%20(1).png)
+Create course page
+
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-announcements-2025-08-03-18_49_56.png)
+Announcement page (for lecturers) where they can post, edit/comment or delete the announcements
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-announcements-2025-08-03-18_50_59.png)
+Announcement apge for the students, where they can view and also drop comments
+
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-materials-2025-08-03-18_50_04.png)
+Course material page for the lecturer (he can upload., view and even download or edit the materials)
+
+
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-profile-2025-08-03-18_50_15.png)
+Profile page for the lecturer
+![screenshots](/frontend/public/screenshots/screencapture-scholaria-vercel-app-profile-2025-08-03-18_51_15.png)
+Profile page for the student
+
+
 ## Contributing
 
 We welcome contributions to improve Scholaria! Please follow these steps:
