@@ -36,7 +36,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log('Fetching user with token:', localStorage.getItem('token'));
       const response = await api.get('/auth/me');
       console.log('User fetch response:', response.data);
-      // The /auth/me endpoint returns the user directly in data.data
       const userData = response.data.data;
       setUser(userData);
     } catch (error) {
@@ -55,10 +54,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('Setting user:', data.user);
     console.log('Setting token:', data.token);
     
-    // Ensure user object has the correct structure
     const userData = {
       ...data.user,
-      _id: data.user._id || data.user.id // Handle both _id and id for backward compatibility
+      _id: data.user._id || data.user.id 
     };
     
     setUser(userData);
@@ -75,10 +73,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('Setting user:', data.user);
     console.log('Setting token:', data.token);
     
-    // Ensure user object has the correct structure
     const userData = {
       ...data.user,
-      _id: data.user._id || data.user.id // Handle both _id and id for backward compatibility
+      _id: data.user._id || data.user.id 
     };
     
     setUser(userData);

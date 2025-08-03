@@ -18,7 +18,6 @@ export function formatDate(
   formatString: string = 'MMM dd, yyyy',
   fallback: string = 'N/A'
 ): string {
-  // Handle null/undefined
   if (!dateInput) {
     console.warn('Date formatting: null/undefined input');
     return fallback;
@@ -27,17 +26,13 @@ export function formatDate(
   try {
     let date: Date;
     
-    // Handle different input types
     if (typeof dateInput === 'string') {
-      // Try parsing as ISO string first
       if (dateInput.includes('T') || dateInput.includes('Z')) {
         date = parseISO(dateInput);
       } else {
-        // Try as regular date string
         date = new Date(dateInput);
       }
     } else if (typeof dateInput === 'number') {
-      // Handle timestamp
       date = new Date(dateInput);
     } else if (dateInput instanceof Date) {
       date = dateInput;
@@ -46,13 +41,11 @@ export function formatDate(
       return fallback;
     }
     
-    // Validate the date
     if (!isValid(date) || isNaN(date.getTime())) {
       console.warn('Date formatting: invalid date:', dateInput, 'Parsed as:', date);
       return fallback;
     }
     
-    // Format the date
     const result = formatDateFn(date, formatString);
     console.log('Date formatting success:', dateInput, '->', result);
     return result;

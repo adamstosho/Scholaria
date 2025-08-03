@@ -97,11 +97,9 @@ export function useDeleteMaterial() {
 export function useDownloadMaterial() {
   return useMutation({
     mutationFn: async (id: string) => {
-      // First get the material details to get the file type
       const materialResponse = await api.get(`/materials/detail/${id}`);
       const material = materialResponse.data.data;
       
-      // Then download the file
       const response = await api.get(`/materials/download/${id}`, {
         responseType: 'blob',
       });
@@ -113,7 +111,6 @@ export function useDownloadMaterial() {
       };
     },
     onSuccess: (response, id) => {
-      // Create a download link with proper MIME type
       const blob = new Blob([response.data], { 
         type: response.material.fileType 
       });
@@ -121,7 +118,6 @@ export function useDownloadMaterial() {
       const link = document.createElement('a');
       link.href = url;
       
-      // Use the original filename from the material
       const filename = response.material.fileName;
       link.setAttribute('download', filename);
       document.body.appendChild(link);

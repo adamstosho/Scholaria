@@ -71,7 +71,6 @@ export function QuickPreview({
   const getFileTypeInfo = (): FileTypeInfo => {
     const type = fileType.toLowerCase();
     
-    // Images
     if (type.includes('image/') || type.includes('jpg') || type.includes('jpeg') || 
         type.includes('png') || type.includes('gif') || type.includes('webp') || 
         type.includes('svg') || type.includes('bmp')) {
@@ -83,7 +82,6 @@ export function QuickPreview({
       };
     }
     
-    // PDFs
     if (type.includes('pdf') || type.includes('application/pdf')) {
       return {
         icon: <FileText className="h-4 w-4" />,
@@ -93,7 +91,6 @@ export function QuickPreview({
       };
     }
     
-    // Videos
     if (type.includes('video/') || type.includes('mp4') || type.includes('avi') || 
         type.includes('mov') || type.includes('wmv') || type.includes('flv') || 
         type.includes('webm')) {
@@ -105,7 +102,6 @@ export function QuickPreview({
       };
     }
     
-    // Audio
     if (type.includes('audio/') || type.includes('mp3') || type.includes('wav') || 
         type.includes('ogg') || type.includes('aac') || type.includes('flac')) {
       return {
@@ -116,7 +112,6 @@ export function QuickPreview({
       };
     }
     
-    // Text files
     if (type.includes('text/') || type.includes('txt') || type.includes('md') || 
         type.includes('json') || type.includes('xml') || type.includes('csv') || 
         type.includes('log')) {
@@ -128,7 +123,6 @@ export function QuickPreview({
       };
     }
     
-    // Documents
     if (type.includes('doc') || type.includes('docx')) {
       return {
         icon: <FileText className="h-4 w-4" />,
@@ -138,7 +132,6 @@ export function QuickPreview({
       };
     }
     
-    // Spreadsheets
     if (type.includes('xls') || type.includes('xlsx') || type.includes('csv')) {
       return {
         icon: <FileSpreadsheet className="h-4 w-4" />,
@@ -148,7 +141,6 @@ export function QuickPreview({
       };
     }
     
-    // Presentations
     if (type.includes('ppt') || type.includes('pptx')) {
       return {
         icon: <Presentation className="h-4 w-4" />,
@@ -158,7 +150,6 @@ export function QuickPreview({
       };
     }
     
-    // Archives
     if (type.includes('zip') || type.includes('rar') || type.includes('7z') || 
         type.includes('tar') || type.includes('gz')) {
       return {
@@ -169,7 +160,6 @@ export function QuickPreview({
       };
     }
     
-    // Default
     return {
       icon: <File className="h-4 w-4" />,
       color: 'text-gray-500',

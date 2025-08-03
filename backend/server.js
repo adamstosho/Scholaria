@@ -72,7 +72,6 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// For Vercel serverless deployment
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`🚀 Scholaria server running on port ${PORT}`);

@@ -22,7 +22,6 @@ export function useUpdateProfile() {
       return response.data;
     },
     onSuccess: (data) => {
-      // Update the user data in the cache
       queryClient.setQueryData(['user'], data.data);
       toast.success('Profile updated successfully!');
     },

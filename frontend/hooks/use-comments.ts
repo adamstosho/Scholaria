@@ -49,7 +49,6 @@ export function useCreateComment() {
       return response.data;
     },
     onSuccess: (data, variables) => {
-      // Invalidate and refetch comments for this announcement
       queryClient.invalidateQueries({ queryKey: ['comments', variables.announcementId] });
       toast.success('Comment posted successfully!');
     },
@@ -70,7 +69,6 @@ export function useUpdateComment() {
       return response.data;
     },
     onSuccess: (data, variables) => {
-      // Update the comment in the cache
       queryClient.setQueryData(['comments'], (oldData: any) => {
         if (!oldData) return oldData;
         return {
@@ -99,7 +97,6 @@ export function useDeleteComment() {
       return response.data;
     },
     onSuccess: (data, commentId) => {
-      // Remove the comment from the cache
       queryClient.setQueryData(['comments'], (oldData: any) => {
         if (!oldData) return oldData;
         return {

@@ -17,7 +17,6 @@ interface BreadcrumbProps {
 export function Breadcrumb({ items = [], showHome = true }: BreadcrumbProps) {
   const pathname = usePathname();
 
-  // Auto-generate breadcrumbs from pathname if no items provided
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
     const segments = pathname.split('/').filter(Boolean);
     const breadcrumbs: BreadcrumbItem[] = [];
@@ -30,21 +29,17 @@ export function Breadcrumb({ items = [], showHome = true }: BreadcrumbProps) {
     segments.forEach((segment, index) => {
       currentPath += `/${segment}`;
       
-      // Convert segment to readable label
       let label = segment;
       
-      // Handle dynamic routes
       if (segment.startsWith('[') && segment.endsWith(']')) {
         label = 'Details';
       } else {
-        // Convert kebab-case to Title Case
         label = segment
           .split('-')
           .map(word => word.charAt(0).toUpperCase() + word.slice(1))
           .join(' ');
       }
 
-      // Don't make the last item clickable
       const isLast = index === segments.length - 1;
       breadcrumbs.push({
         label,

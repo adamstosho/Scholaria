@@ -16,7 +16,6 @@ const connectDB = async () => {
     console.log(`✅ MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`❌ MongoDB connection error: ${error.message}`);
-    // Don't exit process in serverless environment
     if (process.env.NODE_ENV === 'production') {
       console.error('Continuing without database connection in production');
     } else {
