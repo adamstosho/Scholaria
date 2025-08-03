@@ -17,7 +17,6 @@ const {
 
 const router = express.Router();
 
-// Validation rules
 const materialValidation = [
   body('title')
     .trim()
@@ -65,10 +64,8 @@ const courseIdValidation = [
     .withMessage('Invalid course ID')
 ];
 
-// Apply auth middleware to all routes
 router.use(protect);
 
-// Routes
 router.get('/', getAllMaterials);
 router.post('/upload', authorize('lecturer'), uploadSingle, materialValidation, validate, uploadMaterial);
 router.get('/:courseId', courseIdValidation, validate, getMaterialsByCourse);

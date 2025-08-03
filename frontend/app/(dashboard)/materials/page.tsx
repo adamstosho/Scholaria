@@ -16,7 +16,6 @@ import { motion } from 'framer-motion';
 import { formatDateShort } from '@/lib/utils';
 
 export default function MaterialsPage() {
-  // Helper function to safely format dates
 
   const { user } = useAuth();
   const [search, setSearch] = useState('');
@@ -93,7 +92,6 @@ export default function MaterialsPage() {
           )}
         </div>
 
-        {/* Search and Filter */}
         <div className="mb-8 space-y-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">

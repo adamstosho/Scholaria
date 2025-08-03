@@ -23,16 +23,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { materialSchema, MaterialFormData } from '@/lib/validations';
 import { formatDateFull } from '@/lib/utils';
-
-const materialSchema = z.object({
-  title: z.string().min(3, 'Title must be at least 3 characters').max(100, 'Title must be less than 100 characters'),
-  description: z.string().optional(),
-  category: z.string().min(1, 'Category is required'),
-});
-
-type MaterialFormData = z.infer<typeof materialSchema>;
 
 const categories = [
   'lecture-notes',
@@ -128,7 +120,6 @@ export default function EditMaterialPage() {
       });
       router.push(`/materials/${materialId}`);
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 

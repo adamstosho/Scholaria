@@ -49,7 +49,6 @@ const materialSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for better query performance
 materialSchema.index({ course: 1, uploadedAt: -1 });
 materialSchema.index({ uploadedBy: 1 });
 materialSchema.index({ category: 1 });

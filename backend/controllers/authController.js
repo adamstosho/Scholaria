@@ -1,14 +1,10 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
-// @desc    Register user
-// @route   POST /api/v1/auth/register
-// @access  Public
 const register = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -16,8 +12,6 @@ const register = async (req, res, next) => {
         message: 'User already exists with this email'
       });
     }
-
-    // Create user
     const user = await User.create({
       name,
       email,
@@ -25,7 +19,6 @@ const register = async (req, res, next) => {
       role: role || 'student'
     });
 
-    // Create token
     const token = user.getSignedJwtToken();
 
     res.status(201).json({
@@ -50,14 +43,10 @@ const register = async (req, res, next) => {
   }
 };
 
-// @desc    Login user
-// @route   POST /api/v1/auth/login
-// @access  Public
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate email & password
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -65,7 +54,6 @@ const login = async (req, res, next) => {
       });
     }
 
-    // Check for user
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({
@@ -74,7 +62,6 @@ const login = async (req, res, next) => {
       });
     }
 
-    // Check if password matches
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return res.status(401).json({
@@ -83,7 +70,6 @@ const login = async (req, res, next) => {
       });
     }
 
-    // Create token
     const token = user.getSignedJwtToken();
 
     res.status(200).json({
@@ -108,9 +94,6 @@ const login = async (req, res, next) => {
   }
 };
 
-// @desc    Get current logged in user
-// @route   GET /api/v1/auth/me
-// @access  Private
 const getMe = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id)
@@ -125,15 +108,10 @@ const getMe = async (req, res, next) => {
     next(error);
   }
 };
-
-// @desc    Update user profile
-// @route   PUT /api/v1/auth/profile
-// @access  Private
 const updateProfile = async (req, res, next) => {
   try {
     const { name, email } = req.body;
 
-    // Check if email is already taken by another user
     if (email) {
       const existingUser = await User.findOne({ email, _id: { $ne: req.user.id } });
       if (existingUser) {
@@ -161,17 +139,12 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
-// @desc    Update user password
-// @route   PUT /api/v1/auth/password
-// @access  Private
 const updatePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
 
-    // Get user with password
     const user = await User.findById(req.user.id).select('+password');
 
-    // Check current password
     const isMatch = await user.matchPassword(currentPassword);
     if (!isMatch) {
       return res.status(400).json({
@@ -180,7 +153,6 @@ const updatePassword = async (req, res, next) => {
       });
     }
 
-    // Update password
     user.password = newPassword;
     await user.save();
 
@@ -193,9 +165,6 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
-// @desc    Logout user / clear cookie
-// @route   POST /api/v1/auth/logout
-// @access  Private
 const logout = async (req, res, next) => {
   try {
     res.status(200).json({

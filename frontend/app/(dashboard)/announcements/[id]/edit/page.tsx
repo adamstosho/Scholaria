@@ -23,15 +23,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-
-const announcementSchema = z.object({
-  title: z.string().min(3, 'Title must be at least 3 characters').max(100, 'Title must be less than 100 characters'),
-  body: z.string().min(10, 'Content must be at least 10 characters').max(2000, 'Content must be less than 2000 characters'),
-  isImportant: z.boolean().optional(),
-});
-
-type AnnouncementFormData = z.infer<typeof announcementSchema>;
+import { announcementSchema, AnnouncementFormData } from '@/lib/validations';
 
 export default function EditAnnouncementPage() {
   const params = useParams();
@@ -116,7 +108,6 @@ export default function EditAnnouncementPage() {
       });
       router.push(`/announcements/${announcementId}`);
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 
@@ -127,7 +118,6 @@ export default function EditAnnouncementPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Breadcrumb */}
         <Breadcrumb 
           items={[
             { label: 'Announcements', href: '/announcements' },
@@ -136,7 +126,6 @@ export default function EditAnnouncementPage() {
           ]}
         />
 
-        {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
             <Link href={`/announcements/${announcementId}`}>
@@ -153,7 +142,6 @@ export default function EditAnnouncementPage() {
           </div>
         </div>
 
-        {/* Edit Form */}
         <Card>
           <CardHeader>
             <CardTitle>Announcement Information</CardTitle>

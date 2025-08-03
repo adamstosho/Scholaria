@@ -91,7 +91,6 @@ export function FilePreview({
   const getFileTypeInfo = (): FileTypeInfo => {
     const type = fileType.toLowerCase();
     
-    // Images
     if (type.includes('image/') || type.includes('jpg') || type.includes('jpeg') || 
         type.includes('png') || type.includes('gif') || type.includes('webp') || 
         type.includes('svg') || type.includes('bmp')) {
@@ -104,7 +103,6 @@ export function FilePreview({
       };
     }
     
-    // PDFs
     if (type.includes('pdf') || type.includes('application/pdf')) {
       return {
         icon: <FileText className="h-8 w-8" />,
@@ -115,7 +113,6 @@ export function FilePreview({
       };
     }
     
-    // Videos
     if (type.includes('video/') || type.includes('mp4') || type.includes('avi') || 
         type.includes('mov') || type.includes('wmv') || type.includes('flv') || 
         type.includes('webm')) {
@@ -128,7 +125,6 @@ export function FilePreview({
       };
     }
     
-    // Audio
     if (type.includes('audio/') || type.includes('mp3') || type.includes('wav') || 
         type.includes('ogg') || type.includes('aac') || type.includes('flac')) {
       return {
@@ -140,7 +136,6 @@ export function FilePreview({
       };
     }
     
-    // Text files
     if (type.includes('text/') || type.includes('txt') || type.includes('md') || 
         type.includes('json') || type.includes('xml') || type.includes('csv') || 
         type.includes('log')) {
@@ -153,7 +148,6 @@ export function FilePreview({
       };
     }
     
-    // Documents
     if (type.includes('doc') || type.includes('docx') || type.includes('application/msword') || 
         type.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
       return {
@@ -165,7 +159,6 @@ export function FilePreview({
       };
     }
     
-    // Spreadsheets
     if (type.includes('xls') || type.includes('xlsx') || type.includes('csv') || 
         type.includes('application/vnd.ms-excel') || 
         type.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
@@ -178,7 +171,6 @@ export function FilePreview({
       };
     }
     
-    // Presentations
     if (type.includes('ppt') || type.includes('pptx') || 
         type.includes('application/vnd.ms-powerpoint') || 
         type.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
@@ -191,7 +183,6 @@ export function FilePreview({
       };
     }
     
-    // Archives
     if (type.includes('zip') || type.includes('rar') || type.includes('7z') || 
         type.includes('tar') || type.includes('gz') || type.includes('application/zip')) {
       return {
@@ -203,7 +194,6 @@ export function FilePreview({
       };
     }
     
-    // Default
     return {
       icon: <File className="h-8 w-8" />,
       color: 'text-gray-500',
@@ -484,11 +474,11 @@ export function FilePreview({
               </div>
             )}
 
-            {/* PDF Preview */}
             {fileInfo.previewType === 'pdf' && (
               <iframe
                 src={`${fileUrl}#toolbar=0`}
                 className="w-full h-full min-h-[600px]"
+                title={`PDF preview of ${fileName}`}
                 onLoad={() => setIsLoading(false)}
                 onError={() => {
                   setIsLoading(false);
@@ -497,14 +487,12 @@ export function FilePreview({
               />
             )}
 
-            {/* Image Preview */}
             {fileInfo.previewType === 'image' && (
               <div className="flex items-center justify-center p-4">
                 <img
                   src={fileUrl}
                   alt={fileName}
-                  className="max-w-full max-h-full object-contain transition-transform duration-200"
-                  style={{ transform: `scale(${zoom})` }}
+                  className={`max-w-full max-h-full object-contain transition-transform duration-200 ${zoom !== 1 ? 'scale-150' : ''}`}
                   onLoad={() => setIsLoading(false)}
                   onError={() => {
                     setIsLoading(false);

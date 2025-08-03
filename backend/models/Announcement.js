@@ -35,7 +35,6 @@ const announcementSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for better query performance
 announcementSchema.index({ course: 1, createdAt: -1 });
 announcementSchema.index({ createdBy: 1 });
 

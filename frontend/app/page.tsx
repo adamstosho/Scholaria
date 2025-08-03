@@ -39,6 +39,7 @@ export default function HomePage() {
               width={64} 
               height={64} 
               className="animate-pulse"
+              priority
             />
             <motion.div
               className="absolute inset-0 rounded-full border-4 border-blue-200"
@@ -121,6 +122,7 @@ export default function HomePage() {
                 width={32} 
                 height={32} 
                 className="h-8 w-8"
+                priority
               />
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Scholaria
@@ -450,7 +452,7 @@ export default function HomePage() {
                 rating: 5
               },
               {
-                name: "Prof. T. T., Adebisi",
+                name: "Dr. A. O., Oloyede",
                 role: "Department Head",
                 content: "The announcement system is a game-changer. My students never miss important updates anymore.",
                 rating: 5

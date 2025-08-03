@@ -15,7 +15,6 @@ const {
 
 const router = express.Router();
 
-// Validation rules
 const courseValidation = [
   body('title')
     .trim()
@@ -37,10 +36,8 @@ const courseIdValidation = [
     .withMessage('Invalid course ID')
 ];
 
-// Apply auth middleware to all routes
 router.use(protect);
 
-// Routes
 router.post('/', authorize('lecturer'), courseValidation, validate, createCourse);
 router.get('/', getCourses);
 router.get('/user/my-courses', getUserCourses);

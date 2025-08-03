@@ -29,7 +29,6 @@ interface CommentSectionProps {
 }
 
 export function CommentSection({ announcementId }: CommentSectionProps) {
-  // Helper function to safely format dates
 
 
   const { user } = useAuth();
@@ -55,7 +54,6 @@ export function CommentSection({ announcementId }: CommentSectionProps) {
       });
       setNewComment('');
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 
@@ -70,7 +68,6 @@ export function CommentSection({ announcementId }: CommentSectionProps) {
       setEditingComment(null);
       setEditContent('');
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 
@@ -78,7 +75,6 @@ export function CommentSection({ announcementId }: CommentSectionProps) {
     try {
       await deleteCommentMutation.mutateAsync(commentId);
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 

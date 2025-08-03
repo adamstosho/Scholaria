@@ -13,7 +13,6 @@ const {
 
 const router = express.Router();
 
-// Validation rules
 const registerValidation = [
   body('name')
     .trim()
@@ -64,7 +63,6 @@ const passwordUpdateValidation = [
     .withMessage('New password must be at least 6 characters')
 ];
 
-// Routes
 router.post('/register', registerValidation, validate, register);
 router.post('/login', loginValidation, validate, login);
 router.get('/me', protect, getMe);

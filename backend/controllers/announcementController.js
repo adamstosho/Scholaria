@@ -2,14 +2,9 @@ const Announcement = require('../models/Announcement');
 const Course = require('../models/Course');
 const Comment = require('../models/Comment');
 
-// @desc    Get all announcements for user (across all enrolled courses)
-// @route   GET /api/v1/announcements
-// @access  Private
 const getAllAnnouncements = async (req, res, next) => {
   try {
     const { page = 1, limit = 10 } = req.query;
-
-    // Get all courses where user is enrolled or is lecturer
     const courses = await Course.find({
       $or: [
         { students: req.user.id },
@@ -19,7 +14,6 @@ const getAllAnnouncements = async (req, res, next) => {
 
     const courseIds = courses.map(course => course._id);
 
-    // Get announcements from all user's courses
     const announcements = await Announcement.find({
       course: { $in: courseIds }
     })
@@ -47,15 +41,10 @@ const getAllAnnouncements = async (req, res, next) => {
     next(error);
   }
 };
-
-// @desc    Create announcement
-// @route   POST /api/v1/announcements
-// @access  Private (Lecturer only)
 const createAnnouncement = async (req, res, next) => {
   try {
     const { title, body, courseId, isImportant } = req.body;
 
-    // Check if course exists and user is the lecturer
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({
@@ -93,15 +82,11 @@ const createAnnouncement = async (req, res, next) => {
   }
 };
 
-// @desc    Get announcements by course
-// @route   GET /api/v1/announcements/:courseId
-// @access  Private
 const getAnnouncementsByCourse = async (req, res, next) => {
   try {
     const { courseId } = req.params;
     const { page = 1, limit = 10 } = req.query;
 
-    // Check if course exists
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({
@@ -110,7 +95,6 @@ const getAnnouncementsByCourse = async (req, res, next) => {
       });
     }
 
-    // Check if user is enrolled in the course or is the lecturer
     const isEnrolled = course.students.includes(req.user.id);
     const isLecturer = course.lecturer.toString() === req.user.id;
 
@@ -145,9 +129,6 @@ const getAnnouncementsByCourse = async (req, res, next) => {
   }
 };
 
-// @desc    Get single announcement
-// @route   GET /api/v1/announcements/detail/:id
-// @access  Private
 const getAnnouncement = async (req, res, next) => {
   try {
     const announcement = await Announcement.findById(req.params.id)
@@ -161,7 +142,6 @@ const getAnnouncement = async (req, res, next) => {
       });
     }
 
-    // Check if user is enrolled in the course or is the lecturer
     const course = await Course.findById(announcement.course);
     const isEnrolled = course.students.includes(req.user.id);
     const isLecturer = course.lecturer.toString() === req.user.id;
@@ -182,9 +162,6 @@ const getAnnouncement = async (req, res, next) => {
   }
 };
 
-// @desc    Get announcement with comments
-// @route   GET /api/v1/announcements/:id/with-comments
-// @access  Private
 const getAnnouncementWithComments = async (req, res, next) => {
   try {
     const announcementId = req.params.id;
@@ -200,7 +177,6 @@ const getAnnouncementWithComments = async (req, res, next) => {
       });
     }
 
-    // Check if user is enrolled in the course or is the lecturer
     const course = await Course.findById(announcement.course);
     const isEnrolled = course.students.includes(req.user.id);
     const isLecturer = course.lecturer.toString() === req.user.id;
@@ -211,13 +187,10 @@ const getAnnouncementWithComments = async (req, res, next) => {
         message: 'Not authorized to view this announcement'
       });
     }
-
-    // Get comments for this announcement
     const comments = await Comment.find({ announcement: announcementId })
       .populate('user', 'name email')
       .sort({ createdAt: -1 });
 
-    // Get comment count
     const commentCount = await Comment.countDocuments({ announcement: announcementId });
 
     res.status(200).json({
@@ -233,9 +206,6 @@ const getAnnouncementWithComments = async (req, res, next) => {
   }
 };
 
-// @desc    Update announcement
-// @route   PUT /api/v1/announcements/:id
-// @access  Private (Lecturer only)
 const updateAnnouncement = async (req, res, next) => {
   try {
     const { title, body, isImportant } = req.body;
@@ -248,8 +218,6 @@ const updateAnnouncement = async (req, res, next) => {
         message: 'Announcement not found'
       });
     }
-
-    // Check if user is the creator
     if (announcement.createdBy.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
@@ -274,10 +242,6 @@ const updateAnnouncement = async (req, res, next) => {
     next(error);
   }
 };
-
-// @desc    Delete announcement
-// @route   DELETE /api/v1/announcements/:id
-// @access  Private (Lecturer only)
 const deleteAnnouncement = async (req, res, next) => {
   try {
     const announcement = await Announcement.findById(req.params.id);
@@ -289,7 +253,6 @@ const deleteAnnouncement = async (req, res, next) => {
       });
     }
 
-    // Check if user is the creator
     if (announcement.createdBy.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,

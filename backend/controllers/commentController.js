@@ -2,15 +2,11 @@ const Comment = require('../models/Comment');
 const Announcement = require('../models/Announcement');
 const Course = require('../models/Course');
 
-// @desc    Add comment to announcement
-// @route   POST /api/v1/comments/:announcementId
-// @access  Private
 const addComment = async (req, res, next) => {
   try {
     const { content } = req.body;
     const { announcementId } = req.params;
 
-    // Check if announcement exists
     const announcement = await Announcement.findById(announcementId);
     if (!announcement) {
       return res.status(404).json({
@@ -18,8 +14,6 @@ const addComment = async (req, res, next) => {
         message: 'Announcement not found'
       });
     }
-
-    // Check if user is enrolled in the course or is the lecturer
     const course = await Course.findById(announcement.course);
     const isEnrolled = course.students.includes(req.user.id);
     const isLecturer = course.lecturer.toString() === req.user.id;
@@ -51,15 +45,11 @@ const addComment = async (req, res, next) => {
   }
 };
 
-// @desc    Get comments for announcement
-// @route   GET /api/v1/comments/:announcementId
-// @access  Private
 const getComments = async (req, res, next) => {
   try {
     const { announcementId } = req.params;
     const { page = 1, limit = 10 } = req.query;
 
-    // Check if announcement exists
     const announcement = await Announcement.findById(announcementId);
     if (!announcement) {
       return res.status(404).json({
@@ -68,7 +58,6 @@ const getComments = async (req, res, next) => {
       });
     }
 
-    // Check if user is enrolled in the course or is the lecturer
     const course = await Course.findById(announcement.course);
     const isEnrolled = course.students.includes(req.user.id);
     const isLecturer = course.lecturer.toString() === req.user.id;
@@ -104,9 +93,6 @@ const getComments = async (req, res, next) => {
   }
 };
 
-// @desc    Update comment
-// @route   PUT /api/v1/comments/:id
-// @access  Private
 const updateComment = async (req, res, next) => {
   try {
     const { content } = req.body;
@@ -120,7 +106,6 @@ const updateComment = async (req, res, next) => {
       });
     }
 
-    // Check if user is the comment author
     if (comment.user.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
@@ -150,9 +135,6 @@ const updateComment = async (req, res, next) => {
   }
 };
 
-// @desc    Delete comment
-// @route   DELETE /api/v1/comments/:id
-// @access  Private
 const deleteComment = async (req, res, next) => {
   try {
     const comment = await Comment.findById(req.params.id);
@@ -164,7 +146,6 @@ const deleteComment = async (req, res, next) => {
       });
     }
 
-    // Check if user is the comment author or the announcement creator
     const announcement = await Announcement.findById(comment.announcement);
     const isCommentAuthor = comment.user.toString() === req.user.id;
     const isAnnouncementCreator = announcement.createdBy.toString() === req.user.id;

@@ -27,7 +27,6 @@ import { motion } from 'framer-motion';
 import { formatDateFull, formatDateMedium } from '@/lib/utils';
 
 export default function MaterialDetailPage() {
-  // Helper function to safely format dates
 
   const params = useParams();
   const materialId = params.id as string;

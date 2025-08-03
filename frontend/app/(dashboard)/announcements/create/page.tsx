@@ -17,22 +17,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Megaphone, ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { z } from 'zod';
-
-const announcementSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  body: z.string().min(1, 'Announcement content is required').max(1000, 'Content must be less than 1000 characters'),
-  courseId: z.string().min(1, 'Please select a course'),
-  isImportant: z.boolean().default(false),
-});
-
-type AnnouncementFormData = z.infer<typeof announcementSchema>;
+import { announcementSchema, AnnouncementFormData } from '@/lib/validations';
 
 export default function CreateAnnouncementPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { data: coursesData } = useCourses(1, 50); // Get all courses for the lecturer
+  const { data: coursesData } = useCourses(1, 50); 
   const createAnnouncement = useCreateAnnouncement();
 
   const {
@@ -56,7 +47,6 @@ export default function CreateAnnouncementPage() {
       await createAnnouncement.mutateAsync(data);
       router.push('/announcements');
     } catch (error) {
-      // Error is handled by the mutation
     } finally {
       setIsSubmitting(false);
     }

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // Login form validation
 export const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
@@ -11,10 +11,10 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 // Register form validation
 export const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50, 'Name must be less than 50 characters'),
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  role: z.enum(['student', 'lecturer'], {
-    required_error: 'Please select a role',
+  role: z.enum(['student', 'lecturer']).refine((val) => val !== undefined, {
+    message: 'Please select a role',
   }),
 });
 
@@ -34,7 +34,7 @@ export const announcementSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
   body: z.string().min(1, 'Announcement content is required').max(1000, 'Content must be less than 1000 characters'),
   courseId: z.string().min(1, 'Please select a course'),
-  isImportant: z.boolean().default(false),
+  isImportant: z.boolean(),
 });
 
 export type AnnouncementFormData = z.infer<typeof announcementSchema>;
@@ -59,7 +59,7 @@ export type CommentFormData = z.infer<typeof commentSchema>;
 // Profile form validation
 export const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50, 'Name must be less than 50 characters'),
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().email({ message: 'Please enter a valid email address' }),
   currentPassword: z.string().optional(),
   newPassword: z.string().min(6, 'Password must be at least 6 characters').optional(),
   confirmPassword: z.string().optional(),

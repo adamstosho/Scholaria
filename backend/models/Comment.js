@@ -27,7 +27,6 @@ const commentSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for better query performance
 commentSchema.index({ announcement: 1, createdAt: -1 });
 commentSchema.index({ user: 1 });
 

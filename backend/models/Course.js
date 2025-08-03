@@ -37,7 +37,6 @@ const courseSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for better query performance
 courseSchema.index({ code: 1 });
 courseSchema.index({ lecturer: 1 });
 

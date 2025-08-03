@@ -26,7 +26,6 @@ import { motion } from 'framer-motion';
 import { formatDateMedium, formatDateShort } from '@/lib/utils';
 
 export default function CourseDetailPage() {
-  // Helper function to safely format dates
 
   const params = useParams();
   const courseId = params.id as string;

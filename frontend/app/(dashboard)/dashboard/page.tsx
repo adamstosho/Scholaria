@@ -15,15 +15,14 @@ import { formatDateShort } from '@/lib/utils';
 export default function DashboardPage() {
   const { user } = useAuth();
   const { data: userCoursesData } = useUserCourses(1, 5);
-  const { data: announcementsData } = useAnnouncements(1, 100); // Get all announcements for counting
-  const { data: materialsData } = useMaterials(1, 100); // Get all materials for counting
+  const { data: announcementsData } = useAnnouncements(1, 100);
+  const { data: materialsData } = useMaterials(1, 100); 
   
   const isLecturer = user?.role === 'lecturer';
   const userCourses = userCoursesData?.data || [];
   const announcements = announcementsData?.data || [];
   const materials = materialsData?.data || [];
 
-  // Calculate recent announcements (last 7 days)
   const recentAnnouncements = announcements.filter(announcement => {
     try {
       const announcementDate = new Date(announcement.createdAt);
@@ -35,7 +34,6 @@ export default function DashboardPage() {
     }
   });
 
-  // Calculate total students across all courses (for lecturers)
   const totalStudents = isLecturer ? userCourses.reduce((total, course) => {
     return total + (course.students?.length || 0);
   }, 0) : 0;
@@ -69,7 +67,6 @@ export default function DashboardPage() {
           </motion.p>
         </div>
 
-        {/* Quick Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -151,7 +148,6 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          {/* Recent Courses */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -210,7 +206,6 @@ export default function DashboardPage() {
             </Card>
           </motion.div>
 
-          {/* Quick Actions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

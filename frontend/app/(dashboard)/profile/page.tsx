@@ -19,7 +19,6 @@ import { motion } from 'framer-motion';
 import { formatDateMedium } from '@/lib/utils';
 
 export default function ProfilePage() {
-  // Helper function to safely format dates
 
 
   const { user } = useAuth();
@@ -49,7 +48,6 @@ export default function ProfilePage() {
       });
       reset({ ...data, currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 
@@ -65,7 +63,6 @@ export default function ProfilePage() {
       });
       reset({ ...data, currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 

@@ -17,16 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FileText, ArrowLeft, Loader2, Upload, X, File } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { z } from 'zod';
-
-const materialSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  description: z.string().max(500, 'Description must be less than 500 characters').optional(),
-  courseId: z.string().min(1, 'Please select a course'),
-  category: z.string().min(1, 'Please select a category'),
-});
-
-type MaterialFormData = z.infer<typeof materialSchema>;
+import { materialSchema, MaterialFormData } from '@/lib/validations';
 
 export default function UploadMaterialPage() {
   const router = useRouter();
@@ -62,7 +53,7 @@ export default function UploadMaterialPage() {
       'text/plain': ['.txt'],
     },
     maxFiles: 1,
-    maxSize: 10 * 1024 * 1024, // 10MB
+    maxSize: 10 * 1024 * 1024,
   });
 
   const removeFile = () => {
@@ -95,7 +86,6 @@ export default function UploadMaterialPage() {
       await uploadMaterial.mutateAsync(formData);
       router.push('/materials');
     } catch (error) {
-      // Error is handled by the mutation
     } finally {
       setIsSubmitting(false);
     }
@@ -171,7 +161,6 @@ export default function UploadMaterialPage() {
                   )}
                 </div>
 
-                {/* Title */}
                 <div className="space-y-2">
                   <Label htmlFor="title">Title *</Label>
                   <Input
@@ -184,7 +173,6 @@ export default function UploadMaterialPage() {
                   )}
                 </div>
 
-                {/* Description */}
                 <div className="space-y-2">
                   <Label htmlFor="description">Description</Label>
                   <Textarea
@@ -201,7 +189,6 @@ export default function UploadMaterialPage() {
                   </p>
                 </div>
 
-                {/* Category */}
                 <div className="space-y-2">
                   <Label htmlFor="category">Category *</Label>
                   <Select onValueChange={(value) => setValue('category', value)}>
@@ -221,7 +208,6 @@ export default function UploadMaterialPage() {
                   )}
                 </div>
 
-                {/* File Upload */}
                 <div className="space-y-2">
                   <Label>File *</Label>
                   {!selectedFile ? (
@@ -273,7 +259,6 @@ export default function UploadMaterialPage() {
                   )}
                 </div>
 
-                {/* Submit Buttons */}
                 <div className="flex gap-4 pt-4">
                   <Button
                     type="submit"

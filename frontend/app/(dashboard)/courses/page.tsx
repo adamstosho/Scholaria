@@ -14,7 +14,6 @@ import { motion } from 'framer-motion';
 import { formatDateMedium } from '@/lib/utils';
 
 export default function CoursesPage() {
-  // Helper function to safely format dates
 
 
   const { user } = useAuth();

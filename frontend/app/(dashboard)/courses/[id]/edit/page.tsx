@@ -22,15 +22,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-
-const courseSchema = z.object({
-  title: z.string().min(3, 'Title must be at least 3 characters').max(100, 'Title must be less than 100 characters'),
-  code: z.string().min(2, 'Code must be at least 2 characters').max(20, 'Code must be less than 20 characters'),
-  description: z.string().min(10, 'Description must be at least 10 characters').max(500, 'Description must be less than 500 characters'),
-});
-
-type CourseFormData = z.infer<typeof courseSchema>;
+import { courseSchema, CourseFormData } from '@/lib/validations';
 
 export default function EditCoursePage() {
   const params = useParams();
@@ -111,7 +103,6 @@ export default function EditCoursePage() {
       });
       router.push(`/courses/${courseId}`);
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 
@@ -122,7 +113,6 @@ export default function EditCoursePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Breadcrumb */}
         <Breadcrumb 
           items={[
             { label: 'Courses', href: '/courses' },

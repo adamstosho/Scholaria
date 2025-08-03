@@ -14,7 +14,6 @@ const {
 
 const router = express.Router();
 
-// Validation rules
 const announcementValidation = [
   body('title')
     .trim()
@@ -60,10 +59,8 @@ const courseIdValidation = [
     .withMessage('Invalid course ID')
 ];
 
-// Apply auth middleware to all routes
 router.use(protect);
 
-// Routes
 router.get('/', getAllAnnouncements);
 router.post('/', authorize('lecturer'), announcementValidation, validate, createAnnouncement);
 router.get('/:courseId', courseIdValidation, validate, getAnnouncementsByCourse);

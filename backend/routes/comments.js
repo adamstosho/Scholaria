@@ -11,7 +11,6 @@ const {
 
 const router = express.Router();
 
-// Validation rules
 const commentValidation = [
   body('content')
     .trim()
@@ -31,10 +30,8 @@ const announcementIdValidation = [
     .withMessage('Invalid announcement ID')
 ];
 
-// Apply auth middleware to all routes
 router.use(protect);
 
-// Routes
 router.post('/:announcementId', announcementIdValidation, commentValidation, validate, addComment);
 router.get('/:announcementId', announcementIdValidation, validate, getComments);
 router.put('/:id', idValidation, commentValidation, validate, updateComment);

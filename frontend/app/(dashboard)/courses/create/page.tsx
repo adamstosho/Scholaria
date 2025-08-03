@@ -32,7 +32,6 @@ export default function CreateCoursePage() {
       await createCourseMutation.mutateAsync(data);
       router.push('/courses');
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 
